@@ -3,14 +3,30 @@ import Image from "next/image";
 import { useAuth } from "@/store/authStore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from "@/lib/firebase";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Invoice } from "@/types/invoice";
+import { getAllInvoices } from "@/actions/invoices";
 
 export default function Home() {
 
     const router = useRouter()
     const { setUser, user } = useAuth()
+    const [invoices, setInvoices] = useState<Invoice[]>([])
+
+    useEffect(() => {
+
+        const fetchInvoices = async () => {
+            const invoices = await getAllInvoices()
+            console.log(invoices)
+            setInvoices(invoices)
+        }
+
+        if (user) {
+            fetchInvoices()
+        }
+    }, [user])
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {

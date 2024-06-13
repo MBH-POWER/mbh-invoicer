@@ -18,30 +18,37 @@ interface InvoiceItem {
 }
 
 const InvoiceForm: React.FC = () => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [currency, setCurrency] = useState<string>("$");
-    const [currentDate, setCurrentDate] = useState<string>(
+    const [isOpen, setIsOpen] = useState<boolean>(false); //modal state
+    const [currency, setCurrency] = useState<string>("₦"); // currency icon
+    const [currentDate, setCurrentDate] = useState<string>( // today's date
         new Date().toLocaleDateString()
     );
-    const [invoiceNumber, setInvoiceNumber] = useState<number>(1);
-    const [dateOfIssue, setDateOfIssue] = useState<string>("");
-    const [billTo, setBillTo] = useState<string>("");
+    const [invoiceNumber, setInvoiceNumber] = useState<number>(1); //invoice number, we are gonna use firebase to populate this
+    const [dateOfIssue, setDateOfIssue] = useState<string>(""); // due data of the invoice
+
+    //info of the sender of the invoice, will generate automatically later
+    const [billTo, setBillTo] = useState<string>(""); 
     const [billToEmail, setBillToEmail] = useState<string>("");
     const [billToAddress, setBillToAddress] = useState<string>("");
+
+    //info of the sendee of the invoice
     const [billFrom, setBillFrom] = useState<string>("");
     const [billFromEmail, setBillFromEmail] = useState<string>("");
     const [billFromAddress, setBillFromAddress] = useState<string>("");
-    const [notes, setNotes] = useState<string>(
-        "Thank you for doing business with us. Have a great day!"
-    );
-    const [total, setTotal] = useState<string>("0.00");
-    const [subTotal, setSubTotal] = useState<string>("0.00");
-    const [taxRate, setTaxRate] = useState<string>("");
-    const [taxAmount, setTaxAmount] = useState<string>("0.00");
-    const [discountRate, setDiscountRate] = useState<string>("");
-    const [discountAmount, setDiscountAmount] = useState<string>("0.00");
 
-    const [items, setItems] = useState<InvoiceItem[]>([
+    // invoice notes, thanks etc
+    const [notes, setNotes] = useState<string>(
+        "Thank you for doing business with mbhpower. Have a great day!"
+    );
+
+    const [total, setTotal] = useState<string>("0.00"); // invoice total
+    const [subTotal, setSubTotal] = useState<string>("0.00"); // total before discount and tax
+    const [taxRate, setTaxRate] = useState<string>(""); // tax
+    const [taxAmount, setTaxAmount] = useState<string>("0.00"); // tax amount
+    const [discountRate, setDiscountRate] = useState<string>(""); // discount
+    const [discountAmount, setDiscountAmount] = useState<string>("0.00"); // discount amount
+
+    const [items, setItems] = useState<InvoiceItem[]>([ //invoice items
         {
             id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
             name: "",
@@ -122,7 +129,7 @@ const InvoiceForm: React.FC = () => {
     };
 
     return (
-        <Form onSubmit={openModal}>
+        <Form onSubmit={openModal} className="text-sm">
             <Row>
                 <Col md={8} lg={9}>
                     <Card className="p-4 p-xl-5 my-3 my-xl-4">
@@ -321,15 +328,12 @@ const InvoiceForm: React.FC = () => {
                                 className="btn btn-light my-1"
                                 aria-label="Change Currency"
                             >
+                                <option value="₦">NGN (Nigerian Naira)</option>
+                                <option value="₹">INR (Indian Rupee)</option>
                                 <option value="$">USD (United States Dollar)</option>
                                 <option value="£">GBP (British Pound Sterling)</option>
-                                <option value="₹">INR (Indian Rupee)</option>
                                 <option value="¥">JPY (Japanese Yen)</option>
                                 <option value="$">CAD (Canadian Dollar)</option>
-                                <option value="$">AUD (Australian Dollar)</option>
-                                <option value="$">SGD (Singapore Dollar)</option>
-                                <option value="¥">CNY (Chinese Renminbi)</option>
-                                <option value="₿">BTC (Bitcoin)</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="my-3">
