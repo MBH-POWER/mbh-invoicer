@@ -8,6 +8,12 @@ import Card from "react-bootstrap/Card";
 import InvoiceItem from "@/components/InvoiceItem";
 import InvoiceModal from "@/components/InvoiceModal";
 import InputGroup from "react-bootstrap/InputGroup";
+import { Invoice } from "@/types/invoice";
+import { useAuth } from "@/store/authStore";
+import { createInvoice, getLastInvoice } from "@/actions/invoices";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, database } from "@/lib/firebase";
+import firebase from "firebase/compat/app";
 
 interface InvoiceItem {
     id: string;
@@ -18,16 +24,19 @@ interface InvoiceItem {
 }
 
 const InvoiceForm: React.FC = () => {
+
+    const { user, setUser } = useAuth()
+
     const [isOpen, setIsOpen] = useState<boolean>(false); //modal state
     const [currency, setCurrency] = useState<string>("₦"); // currency icon
     const [currentDate, setCurrentDate] = useState<string>( // today's date
         new Date().toLocaleDateString()
     );
-    const [invoiceNumber, setInvoiceNumber] = useState<number>(1); //invoice number, we are gonna use firebase to populate this
+    const [invoiceNumber, setInvoiceNumber] = useState<number>(0); //invoice number, we are gonna use firebase to populate this
     const [dateOfIssue, setDateOfIssue] = useState<string>(""); // due data of the invoice
 
     //info of the sender of the invoice, will generate automatically later
-    const [billTo, setBillTo] = useState<string>(""); 
+    const [billTo, setBillTo] = useState<string>("");
     const [billToEmail, setBillToEmail] = useState<string>("");
     const [billToAddress, setBillToAddress] = useState<string>("");
 
@@ -43,9 +52,9 @@ const InvoiceForm: React.FC = () => {
 
     const [total, setTotal] = useState<string>("0.00"); // invoice total
     const [subTotal, setSubTotal] = useState<string>("0.00"); // total before discount and tax
-    const [taxRate, setTaxRate] = useState<string>(""); // tax
+    const [taxRate, setTaxRate] = useState<number>(0); // tax
     const [taxAmount, setTaxAmount] = useState<string>("0.00"); // tax amount
-    const [discountRate, setDiscountRate] = useState<string>(""); // discount
+    const [discountRate, setDiscountRate] = useState<number>(0); // discount
     const [discountAmount, setDiscountAmount] = useState<string>("0.00"); // discount amount
 
     const [items, setItems] = useState<InvoiceItem[]>([ //invoice items
@@ -57,6 +66,31 @@ const InvoiceForm: React.FC = () => {
             quantity: 1,
         },
     ]);
+
+    useEffect(() => {
+
+        const setNewInvoiceId = async () => {
+            const invoice = await getLastInvoice()
+            if (invoice) {
+                setInvoiceNumber(invoice.invoiceNumber + 1)
+            } else {
+                setInvoiceNumber(1)
+            }
+        }
+
+        if (user) {
+            setNewInvoiceId()
+        }
+    }, [user])
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
 
     const handleCalculateTotal = useCallback(() => {
         let newSubTotal = items
@@ -118,10 +152,47 @@ const InvoiceForm: React.FC = () => {
         handleCalculateTotal();
     };
 
-    const openModal = (event: React.FormEvent<HTMLFormElement>) => {
+    if (!user) {
+        return <div className="w-full min-h-screen flex items-center justify-center">
+            <p className="font-semibold text-lg">Loading ...</p>
+        </div>
+    }
+
+    const openModal = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleCalculateTotal();
+        const invoice: Invoice = {
+            items: items,
+            assignee: {
+                email: user.email,
+                uid: user.uid,
+            },
+            currency: currency,
+            billTo: {
+                name: billTo,
+                email: billToEmail,
+                address: billToAddress,
+            },
+            billFrom: {
+                name: billFrom,
+                email: billFromEmail,
+                address: billFromAddress,
+            },
+            notes: notes,
+            dateOfIssue: dateOfIssue,
+            total: total,
+            taxRate: taxRate,
+            invoiceNumber: invoiceNumber,
+            subTotal: subTotal,
+            discountRate: discountRate,
+            discountAmount: discountAmount,
+            taxAmount: taxAmount,
+            createdAt: new Date()
+        }
+        await createInvoice(invoice)
+        console.log(invoice);
         setIsOpen(true);
+
     };
 
     const closeModal = () => {
@@ -159,6 +230,7 @@ const InvoiceForm: React.FC = () => {
                                     type="number"
                                     value={invoiceNumber}
                                     name="invoiceNumber"
+                                    disabled
                                     onChange={handleChange(setInvoiceNumber)}
                                     min="1"
                                     style={{ maxWidth: "70px" }}

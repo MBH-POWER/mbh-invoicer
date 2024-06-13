@@ -1,7 +1,7 @@
 import { database as db } from "@/lib/firebase";
 import { Invoice } from "@/types/invoice";
-import { query, startAfter } from "firebase/database";
-import { collection,getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy } from "firebase/firestore";
+import firebase from "firebase/compat/app";
+import { collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy } from "firebase/firestore";
 
 // export const getInvoicesWithPagination = async (pageSize: number, lastVisible?: any) => {
 //     try {
@@ -29,6 +29,29 @@ import { collection,getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, o
 //         return { invoices: [], lastVisible: null };
 //     }
 // };
+
+export const getLastInvoice = async (): Promise<Invoice | null> => {
+    try {
+        const invoicesRef = collection(db, "invoices")
+        const invoicesQuery = query(invoicesRef, orderBy("createdAt", "desc"), limit(1));
+        const invoiceSnapshot = await getDocs(invoicesQuery);
+
+        if (invoiceSnapshot.empty) {
+            console.log(invoiceSnapshot)
+            console.log("No invoices found!");
+            return null;
+        }
+
+        const lastInvoiceDoc = invoiceSnapshot.docs[0];
+        const lastInvoice = lastInvoiceDoc.data();
+
+        console.log("Last invoice: ", lastInvoice);
+        return lastInvoice as Invoice;
+    } catch (error) {
+        console.error("Error getting last invoice: ", error);
+        return null;
+    }
+};
 
 export const getAllInvoices = async () => {
     try {

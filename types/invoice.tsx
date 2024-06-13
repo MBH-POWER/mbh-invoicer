@@ -1,4 +1,5 @@
 import { User } from "firebase/auth";
+import firebase from "firebase/compat/app";
 
 export interface InvoiceItem {
     id: string;
@@ -10,7 +11,7 @@ export interface InvoiceItem {
 
 
 export interface Invoice {
-    assignee: User
+    assignee: Partial<User>
     invoiceNumber: number;
     dateOfIssue: string;
     billFrom: {
@@ -32,5 +33,6 @@ export interface Invoice {
     discountRate: string;
     discountAmount: string;
     total: string;
+    createdAt: any
 }
 
