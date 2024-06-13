@@ -56,7 +56,8 @@ export const getLastInvoice = async (): Promise<Invoice | null> => {
 export const getAllInvoices = async () => {
     try {
         const invoicesRef = collection(db, "invoices");
-        const invoiceSnapshot = await getDocs(invoicesRef);
+        const invoicesQuery = query(invoicesRef, orderBy("createdAt", "desc"))
+        const invoiceSnapshot = await getDocs(invoicesQuery);
         const invoices: Invoice[] = [];
         invoiceSnapshot.forEach((doc) => {
             invoices.push(doc.data() as Invoice);

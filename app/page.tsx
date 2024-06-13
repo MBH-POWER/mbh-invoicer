@@ -62,13 +62,13 @@ export default function Home() {
                         className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
                         href="/create"
                     >
-                        <Button className="bg-green-950 hover:bg-green-900">Create Invoice</Button>
+                        <Button className="bg-green-950 hover:bg-green-900 font-semibold">Create Invoice</Button>
                     </a>
                 </div>
             </div>
 
             <div className="w-full">
-                <Table>
+                <Table className={`${invoices.length <= 0 ? "hidden" : null}`}>
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[100px]">Invoice No</TableHead>
