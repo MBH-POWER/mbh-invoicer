@@ -52,7 +52,7 @@ const InvoiceForm: React.FC = () => {
 
     const [total, setTotal] = useState<string>("0.00"); // invoice total
     const [subTotal, setSubTotal] = useState<string>("0.00"); // total before discount and tax
-    const [taxRate, setTaxRate] = useState<number>(0); // tax
+    const [taxRate, setTaxRate] = useState<number>(7.5); // tax
     const [taxAmount, setTaxAmount] = useState<string>("0.00"); // tax amount
     const [discountRate, setDiscountRate] = useState<number>(0); // discount
     const [discountAmount, setDiscountAmount] = useState<string>("0.00"); // discount amount
