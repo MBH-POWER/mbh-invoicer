@@ -5,35 +5,9 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
-import { BiCloudDownload } from "react-icons/bi";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import { InvoiceItem } from "@/types/invoice";
+import { GenerateInvoice } from "@/lib/GenerateInvoicePrint";
 
-const GenerateInvoice: React.FC = () => {
-    const generateInvoice = () => {
-        html2canvas(document.querySelector("#invoiceCapture") as HTMLElement).then((canvas) => {
-            const imgData = canvas.toDataURL("image/png", 1.0);
-            const pdf = new jsPDF({
-                orientation: "portrait",
-                unit: "pt",
-                format: [612, 792],
-            });
-            pdf.internal.scaleFactor = 1;
-            const imgProps = pdf.getImageProperties(imgData);
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.save("invoice-001.pdf");
-        });
-    };
-
-    return (
-        <Button variant="outline-primary" className="d-block w-100 mt-3 mt-md-0" onClick={generateInvoice}>
-            <BiCloudDownload style={{ width: "16px", height: "16px", marginTop: "-3px" }} className="me-2" />
-            Download Copy
-        </Button>
-    );
-};
 
 interface InvoiceModalProps {
     showModal: boolean;
@@ -51,15 +25,16 @@ interface InvoiceModalProps {
     };
     currency: string;
     total: string;
-    items: {
-        quantity: number;
-        name: string;
-        description: string;
-        price: number;
-    }[];
+    items: InvoiceItem[],
     taxAmount: string;
     discountAmount: string;
     subTotal: string;
+    // items: {
+    //     quantity: number;
+    //     name: string;
+    //     description: string;
+    //     price: number;
+    // }[];
 }
 
 const InvoiceModal: React.FC<InvoiceModalProps> = ({
@@ -130,7 +105,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                                                 {currency} {item.price}
                                             </td>
                                             <td className="text-end" style={{ width: "100px" }}>
-                                                {currency} {item.price * item.quantity}
+                                                {currency} {Number(item.price) * item.quantity}
                                             </td>
                                         </tr>
                                     );
@@ -191,7 +166,11 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                 </div>
                 <div className="pb-4 px-4">
                     <Row>
-                        <Col md={6}></Col>
+                        <Col md={6}>
+                            <Button variant="outline-primary" onClick={closeModal}>
+                                Save Invoice
+                            </Button>
+                        </Col>
                         <Col md={6}>
                             <GenerateInvoice />
                         </Col>

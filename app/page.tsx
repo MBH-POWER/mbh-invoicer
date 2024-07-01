@@ -3,7 +3,6 @@ import { useAuth } from "@/store/authStore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from "@/lib/firebase";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Invoice } from "@/types/invoice";
 import { getAllInvoices } from "@/actions/invoices";
@@ -15,6 +14,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const router = useRouter();
@@ -35,20 +35,22 @@ export default function Home() {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
+            if (user) {
+                setUser(user);
+            } else {
+                router.push("/signin");
+            }
         });
 
         return () => unsubscribe();
     }, [setUser]);
 
     const handleInvoiceClick = (invoiceId: string) => {
-        // Add your custom logic here
-        console.log(`Invoice ${invoiceId} clicked`);
         router.push(`/invoices/${invoiceId}`);
     };
 
     if (!user) {
-        return null;
+        return <p>Loading pls wait</p>;
     }
 
     return (

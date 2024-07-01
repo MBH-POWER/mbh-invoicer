@@ -12,8 +12,7 @@ import { Invoice } from "@/types/invoice";
 import { useAuth } from "@/store/authStore";
 import { createInvoice, getLastInvoice } from "@/actions/invoices";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, database } from "@/lib/firebase";
-import firebase from "firebase/compat/app";
+import { auth } from "@/lib/firebase";
 
 interface InvoiceItem {
     id: string;
@@ -24,64 +23,54 @@ interface InvoiceItem {
 }
 
 const InvoiceForm: React.FC = () => {
-
-    const { user, setUser } = useAuth()
-
-    const [isOpen, setIsOpen] = useState<boolean>(false); //modal state
-    const [currency, setCurrency] = useState<string>("₦"); // currency icon
-    const [currentDate, setCurrentDate] = useState<string>( // today's date
-        new Date().toLocaleDateString()
-    );
-    const [invoiceNumber, setInvoiceNumber] = useState<number>(0); //invoice number, we are gonna use firebase to populate this
-    const [dateOfIssue, setDateOfIssue] = useState<string>(""); // due data of the invoice
-
-    //info of the sender of the invoice, will generate automatically later
-    const [billTo, setBillTo] = useState<string>("");
-    const [billToEmail, setBillToEmail] = useState<string>("");
-    const [billToAddress, setBillToAddress] = useState<string>("");
-
-    //info of the sendee of the invoice
-    const [billFrom, setBillFrom] = useState<string>("");
-    const [billFromEmail, setBillFromEmail] = useState<string>("");
-    const [billFromAddress, setBillFromAddress] = useState<string>("");
-
-    // invoice notes, thanks etc
-    const [notes, setNotes] = useState<string>(
-        "Thank you for doing business with mbhpower. Have a great day!"
-    );
-
-    const [total, setTotal] = useState<string>("0.00"); // invoice total
-    const [subTotal, setSubTotal] = useState<string>("0.00"); // total before discount and tax
-    const [taxRate, setTaxRate] = useState<number>(7.5); // tax
-    const [taxAmount, setTaxAmount] = useState<string>("0.00"); // tax amount
-    const [discountRate, setDiscountRate] = useState<number>(0); // discount
-    const [discountAmount, setDiscountAmount] = useState<string>("0.00"); // discount amount
-
-    const [items, setItems] = useState<InvoiceItem[]>([ //invoice items
-        {
-            id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
-            name: "",
-            description: "",
-            price: "1.00",
-            quantity: 1,
-        },
-    ]);
+    const { user, setUser } = useAuth();
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [state, setState] = useState({
+        currency: "₦",
+        currentDate: new Date().toLocaleDateString(),
+        invoiceNumber: 0,
+        dateOfIssue: "",
+        billTo: "",
+        billToEmail: "",
+        billToAddress: "",
+        billFrom: "",
+        billFromEmail: "",
+        billFromAddress: "",
+        notes: "Thank you for doing business with mbhpower. Have a great day!",
+        total: "0.00",
+        subTotal: "0.00",
+        taxRate: 7.5,
+        taxAmount: "0.00",
+        discountRate: 0,
+        discountAmount: "0.00",
+        items: [
+            {
+                id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
+                name: "",
+                description: "",
+                price: "1.00",
+                quantity: 1,
+            },
+        ] as InvoiceItem[],
+    });
 
     useEffect(() => {
-
         const setNewInvoiceId = async () => {
-            const invoice = await getLastInvoice()
+            const invoice = await getLastInvoice();
             if (invoice) {
-                setInvoiceNumber(invoice.invoiceNumber + 1)
+                setState((prevState) => ({
+                    ...prevState,
+                    invoiceNumber: invoice.invoiceNumber + 1,
+                }));
             } else {
-                setInvoiceNumber(1)
+                setState((prevState) => ({ ...prevState, invoiceNumber: 1 }));
             }
-        }
+        };
 
         if (user) {
-            setNewInvoiceId()
+            setNewInvoiceId();
         }
-    }, [user])
+    }, [user]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -89,39 +78,40 @@ const InvoiceForm: React.FC = () => {
         });
 
         return () => unsubscribe();
-    }, []);
-
+    }, [setUser]);
 
     const handleCalculateTotal = useCallback(() => {
-        let newSubTotal = items
-            .reduce((acc, item) => {
-                return acc + parseFloat(item.price) * parseInt(item.quantity.toString());
-            }, 0)
+        const { items, taxRate, discountRate } = state;
+
+        const newSubTotal = items
+            .reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
             .toFixed(2);
-
-        let newtaxAmount = (parseFloat(newSubTotal) * (parseFloat(taxRate) / 100)).toFixed(2);
-        let newdiscountAmount = (
-            parseFloat(newSubTotal) * (parseFloat(discountRate) / 100)
-        ).toFixed(2);
-        let newTotal = (
+        const newTaxAmount = ((parseFloat(newSubTotal) * taxRate) / 100).toFixed(2);
+        const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
+        const newTotal = (
             parseFloat(newSubTotal) -
-            parseFloat(newdiscountAmount) +
-            parseFloat(newtaxAmount)
+            parseFloat(newDiscountAmount) +
+            parseFloat(newTaxAmount)
         ).toFixed(2);
 
-        setSubTotal(newSubTotal);
-        setTaxAmount(newtaxAmount);
-        setDiscountAmount(newdiscountAmount);
-        setTotal(newTotal);
-    }, [items, taxRate, discountRate]);
+        setState((prevState) => ({
+            ...prevState,
+            subTotal: newSubTotal,
+            taxAmount: newTaxAmount,
+            discountAmount: newDiscountAmount,
+            total: newTotal,
+        }));
+    }, [state.items, state.taxRate, state.discountRate]);
 
     useEffect(() => {
         handleCalculateTotal();
     }, [handleCalculateTotal]);
 
     const handleRowDel = (item: InvoiceItem) => {
-        const updatedItems = items.filter((i) => i.id !== item.id);
-        setItems(updatedItems);
+        setState((prevState) => ({
+            ...prevState,
+            items: prevState.items.filter((i) => i.id !== item.id),
+        }));
     };
 
     const handleAddEvent = () => {
@@ -133,66 +123,76 @@ const InvoiceForm: React.FC = () => {
             description: "",
             quantity: 1,
         };
-        setItems([...items, newItem]);
+        setState((prevState) => ({
+            ...prevState,
+            items: [...prevState.items, newItem],
+        }));
     };
 
     const onItemizedItemEdit = (evt: React.ChangeEvent<HTMLInputElement>) => {
         const { id, name, value } = evt.target;
 
-        const updatedItems = items.map((item) =>
-            item.id === id ? { ...item, [name]: value } : item
-        );
-        setItems(updatedItems);
+        setState((prevState) => ({
+            ...prevState,
+            items: prevState.items.map((item) =>
+                item.id === id ? { ...item, [name]: value } : item
+            ),
+        }));
     };
 
-    const handleChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (
+    const handleChange = (name: string) => (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setter(event.target.value);
+        const value = event.target.value;
+        setState((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
         handleCalculateTotal();
     };
 
     if (!user) {
-        return <div className="w-full min-h-screen flex items-center justify-center">
-            <p className="font-semibold text-lg">Loading ...</p>
-        </div>
+        return (
+            <div className="w-full min-h-screen flex items-center justify-center">
+                <p className="font-semibold text-lg">Loading ...</p>
+            </div>
+        );
     }
 
     const openModal = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleCalculateTotal();
         const invoice: Invoice = {
-            items: items,
+            items: state.items,
             assignee: {
                 email: user.email,
                 uid: user.uid,
             },
-            currency: currency,
+            currency: state.currency,
             billTo: {
-                name: billTo,
-                email: billToEmail,
-                address: billToAddress,
+                name: state.billTo,
+                email: state.billToEmail,
+                address: state.billToAddress,
             },
             billFrom: {
-                name: billFrom,
-                email: billFromEmail,
-                address: billFromAddress,
+                name: state.billFrom,
+                email: state.billFromEmail,
+                address: state.billFromAddress,
             },
-            notes: notes,
-            dateOfIssue: dateOfIssue,
-            total: total,
-            taxRate: taxRate,
-            invoiceNumber: invoiceNumber,
-            subTotal: subTotal,
-            discountRate: discountRate,
-            discountAmount: discountAmount,
-            taxAmount: taxAmount,
-            createdAt: new Date()
-        }
-        await createInvoice(invoice)
+            notes: state.notes,
+            dateOfIssue: state.dateOfIssue,
+            total: state.total,
+            taxRate: String(state.taxRate),
+            invoiceNumber: state.invoiceNumber,
+            subTotal: state.subTotal,
+            discountRate: String(state.discountRate),
+            discountAmount: state.discountAmount,
+            taxAmount: state.taxAmount,
+            createdAt: new Date(),
+        };
+        await createInvoice(invoice);
         console.log(invoice);
         setIsOpen(true);
-
     };
 
     const closeModal = () => {
@@ -209,16 +209,16 @@ const InvoiceForm: React.FC = () => {
                                 <div className="d-flex flex-column">
                                     <div className="mb-2">
                                         <span className="fw-bold">Current&nbsp;Date:&nbsp;</span>
-                                        <span className="current-date">{currentDate}</span>
+                                        <span className="current-date">{state.currentDate}</span>
                                     </div>
                                 </div>
                                 <div className="d-flex flex-row align-items-center">
                                     <span className="fw-bold d-block me-2">Due&nbsp;Date:</span>
                                     <Form.Control
                                         type="date"
-                                        value={dateOfIssue}
+                                        value={state.dateOfIssue}
                                         name="dateOfIssue"
-                                        onChange={handleChange(setDateOfIssue)}
+                                        onChange={handleChange("dateOfIssue")}
                                         style={{ maxWidth: "150px" }}
                                         required
                                     />
@@ -228,10 +228,10 @@ const InvoiceForm: React.FC = () => {
                                 <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
                                 <Form.Control
                                     type="number"
-                                    value={invoiceNumber}
+                                    value={state.invoiceNumber}
                                     name="invoiceNumber"
                                     disabled
-                                    onChange={handleChange(setInvoiceNumber)}
+                                    onChange={handleChange("invoiceNumber")}
                                     min="1"
                                     style={{ maxWidth: "70px" }}
                                     required
@@ -244,33 +244,33 @@ const InvoiceForm: React.FC = () => {
                                 <Form.Label className="fw-bold">Bill from:</Form.Label>
                                 <Form.Control
                                     placeholder="Who is this invoice from?"
-                                    rows={3}
-                                    value={billFrom}
+                                    //rows={3}
+                                    value={state.billFrom}
                                     type="text"
                                     name="billFrom"
                                     className="my-2"
-                                    onChange={handleChange(setBillFrom)}
+                                    onChange={handleChange("billFrom")}
                                     autoComplete="name"
                                     required
                                 />
                                 <Form.Control
                                     placeholder="Email address"
-                                    value={billFromEmail}
+                                    value={state.billFromEmail}
                                     type="email"
                                     name="billFromEmail"
                                     className="my-2"
-                                    onChange={handleChange(setBillFromEmail)}
+                                    onChange={handleChange("billFromEmail")}
                                     autoComplete="email"
                                     required
                                 />
                                 <Form.Control
                                     placeholder="Billing address"
-                                    value={billFromAddress}
+                                    value={state.billFromAddress}
                                     type="text"
                                     name="billFromAddress"
                                     className="my-2"
                                     autoComplete="address"
-                                    onChange={handleChange(setBillFromAddress)}
+                                    onChange={handleChange("billFromAddress")}
                                     required
                                 />
                             </Col>
@@ -278,33 +278,33 @@ const InvoiceForm: React.FC = () => {
                                 <Form.Label className="fw-bold">Bill to:</Form.Label>
                                 <Form.Control
                                     placeholder="Who is this invoice to?"
-                                    rows={3}
-                                    value={billTo}
+                                    //rows={3}
+                                    value={state.billTo}
                                     type="text"
                                     name="billTo"
                                     className="my-2"
-                                    onChange={handleChange(setBillTo)}
+                                    onChange={handleChange("billTo")}
                                     autoComplete="name"
                                     required
                                 />
                                 <Form.Control
                                     placeholder="Email address"
-                                    value={billToEmail}
+                                    value={state.billToEmail}
                                     type="email"
                                     name="billToEmail"
                                     className="my-2"
-                                    onChange={handleChange(setBillToEmail)}
+                                    onChange={handleChange("billToEmail")}
                                     autoComplete="email"
                                     required
                                 />
                                 <Form.Control
                                     placeholder="Billing address"
-                                    value={billToAddress}
+                                    value={state.billToAddress}
                                     type="text"
                                     name="billToAddress"
                                     className="my-2"
                                     autoComplete="address"
-                                    onChange={handleChange(setBillToAddress)}
+                                    onChange={handleChange("billToAddress")}
                                     required
                                 />
                             </Col>
@@ -313,32 +313,32 @@ const InvoiceForm: React.FC = () => {
                             onItemizedItemEdit={onItemizedItemEdit}
                             onRowAdd={handleAddEvent}
                             onRowDel={handleRowDel}
-                            currency={currency}
-                            items={items}
+                            currency={state.currency}
+                            items={state.items}
                         />
                         <Row className="mt-4 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">
                                     <span className="fw-bold">Subtotal:</span>
                                     <span>
-                                        {currency}
-                                        {subTotal}
+                                        {state.currency}
+                                        {state.subTotal}
                                     </span>
                                 </div>
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                                     <span className="fw-bold">Discount:</span>
                                     <span>
-                                        <span className="small ">({discountRate || 0}%)</span>
-                                        {currency}
-                                        {discountAmount || 0}
+                                        <span className="small ">({state.discountRate || 0}%)</span>
+                                        {state.currency}
+                                        {state.discountAmount || 0}
                                     </span>
                                 </div>
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                                     <span className="fw-bold">Tax:</span>
                                     <span>
-                                        <span className="small ">({taxRate || 0}%)</span>
-                                        {currency}
-                                        {taxAmount || 0}
+                                        <span className="small ">({state.taxRate || 0}%)</span>
+                                        {state.currency}
+                                        {state.taxAmount || 0}
                                     </span>
                                 </div>
                                 <hr />
@@ -348,8 +348,8 @@ const InvoiceForm: React.FC = () => {
                                 >
                                     <span className="fw-bold">Total:</span>
                                     <span className="fw-bold">
-                                        {currency}
-                                        {total || 0}
+                                        {state.currency}
+                                        {state.total || 0}
                                     </span>
                                 </div>
                             </Col>
@@ -359,8 +359,8 @@ const InvoiceForm: React.FC = () => {
                         <Form.Control
                             placeholder="Thank you for doing business with us. Have a great day!"
                             name="notes"
-                            value={notes}
-                            onChange={handleChange(setNotes)}
+                            value={state.notes}
+                            onChange={handleChange("notes")}
                             as="textarea"
                             className="my-2"
                             rows={1}
@@ -373,30 +373,27 @@ const InvoiceForm: React.FC = () => {
                             showModal={isOpen}
                             closeModal={closeModal}
                             info={{
-                                dateOfIssue,
-                                invoiceNumber,
-                                billTo,
-                                billToEmail,
-                                billToAddress,
-                                billFrom,
-                                billFromEmail,
-                                billFromAddress,
-                                notes,
+                                dateOfIssue: state.dateOfIssue,
+                                invoiceNumber: String(state.invoiceNumber),
+                                billTo: state.billTo,
+                                billToEmail: state.billToEmail,
+                                billToAddress: state.billToAddress,
+                                billFrom: state.billFrom,
+                                billFromEmail: state.billFromEmail,
+                                billFromAddress: state.billFromAddress,
+                                notes: state.notes,
                             }}
-                            items={items}
-                            currency={currency}
-                            subTotal={subTotal}
-                            taxAmount={taxAmount}
-                            discountAmount={discountAmount}
-                            total={total}
+                            items={state.items}
+                            currency={state.currency}
+                            subTotal={state.subTotal}
+                            taxAmount={state.taxAmount}
+                            discountAmount={state.discountAmount}
+                            total={state.total}
                         />
-
                         <Form.Group className="mb-3">
                             <Form.Label className="fw-bold">Currency:</Form.Label>
                             <Form.Select
-                                onChange={(e) => {
-                                    setCurrency(e.target.value);
-                                }}
+                                onChange={(e) => setState({ ...state, currency: e.target.value })}
                                 className="btn btn-light my-1"
                                 aria-label="Change Currency"
                             >
@@ -414,8 +411,8 @@ const InvoiceForm: React.FC = () => {
                                 <Form.Control
                                     name="taxRate"
                                     type="number"
-                                    value={taxRate}
-                                    onChange={handleChange(setTaxRate)}
+                                    value={state.taxRate}
+                                    onChange={handleChange("taxRate")}
                                     className="bg-white border"
                                     placeholder="0.0"
                                     min="0.00"
@@ -433,8 +430,8 @@ const InvoiceForm: React.FC = () => {
                                 <Form.Control
                                     name="discountRate"
                                     type="number"
-                                    value={discountRate}
-                                    onChange={handleChange(setDiscountRate)}
+                                    value={state.discountRate}
+                                    onChange={handleChange("discountRate")}
                                     className="bg-white border"
                                     placeholder="0.0"
                                     min="0.00"

@@ -1,7 +1,7 @@
 import { database as db } from "@/lib/firebase";
 import { Invoice } from "@/types/invoice";
 import firebase from "firebase/compat/app";
-import { collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy } from "firebase/firestore";
+import { collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy, where, Query } from "firebase/firestore";
 
 // export const getInvoicesWithPagination = async (pageSize: number, lastVisible?: any) => {
 //     try {
@@ -37,15 +37,12 @@ export const getLastInvoice = async (): Promise<Invoice | null> => {
         const invoiceSnapshot = await getDocs(invoicesQuery);
 
         if (invoiceSnapshot.empty) {
-            console.log(invoiceSnapshot)
-            console.log("No invoices found!");
             return null;
         }
 
         const lastInvoiceDoc = invoiceSnapshot.docs[0];
         const lastInvoice = lastInvoiceDoc.data();
 
-        console.log("Last invoice: ", lastInvoice);
         return lastInvoice as Invoice;
     } catch (error) {
         console.error("Error getting last invoice: ", error);
@@ -62,7 +59,6 @@ export const getAllInvoices = async () => {
         invoiceSnapshot.forEach((doc) => {
             invoices.push(doc.data() as Invoice);
         });
-        console.log("All invoices: ", invoices);
         return invoices;
     } catch (error) {
         console.error("Error getting all invoices: ", error);
@@ -73,25 +69,27 @@ export const getAllInvoices = async () => {
 export const createInvoice = async (invoice: Invoice) => {
     try {
         const invoicesRef = collection(db, "invoices");
-        await setDoc(doc(invoicesRef), invoice);
+        await setDoc(doc(invoicesRef, String(invoice.invoiceNumber)), invoice);
         console.log("Invoice created successfully!");
     } catch (error) {
         console.error("Error creating invoice: ", error);
     }
 };
 
-export const getInvoiceById = async (invoiceId: string) => {
+export const getInvoiceById = async (invoiceId: string):Promise<Invoice | null> => {
     try {
-        const invoiceDocRef = doc(db, "invoices", invoiceId);
+        const invoiceDocRef = doc(db, "invoices", String(invoiceId));
         const invoiceDocSnap = await getDoc(invoiceDocRef);
         if (invoiceDocSnap.exists()) {
             const invoiceData = invoiceDocSnap.data() as Invoice;
-            console.log("Invoice data: ", invoiceData);
+            return invoiceData
         } else {
             console.log("Invoice not found!");
+            return null
         }
     } catch (error) {
         console.error("Error getting invoice: ", error);
+        return null
     }
 };
 
