@@ -24,6 +24,7 @@ interface InvoiceItem {
 
 const InvoiceForm: React.FC = () => {
     const { user, setUser } = useAuth();
+    const [invoice, setInvoce] = useState<Invoice>()
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [state, setState] = useState({
         currency: "₦",
@@ -190,8 +191,7 @@ const InvoiceForm: React.FC = () => {
             taxAmount: state.taxAmount,
             createdAt: new Date(),
         };
-        await createInvoice(invoice);
-        console.log(invoice);
+        setInvoce(invoice)
         setIsOpen(true);
     };
 
@@ -372,25 +372,8 @@ const InvoiceForm: React.FC = () => {
                         <InvoiceModal
                             showModal={isOpen}
                             closeModal={closeModal}
-                            info={{
-                                dateOfIssue: state.dateOfIssue,
-                                invoiceNumber: String(state.invoiceNumber),
-                                billTo: state.billTo,
-                                billToEmail: state.billToEmail,
-                                billToAddress: state.billToAddress,
-                                billFrom: state.billFrom,
-                                billFromEmail: state.billFromEmail,
-                                billFromAddress: state.billFromAddress,
-                                notes: state.notes,
-                            }}
-                            items={state.items}
-                            currency={state.currency}
-                            subTotal={state.subTotal}
-                            taxAmount={state.taxAmount}
-                            discountAmount={state.discountAmount}
-                            total={state.total}
-                        />
-                        <Form.Group className="mb-3">
+                            invoice={invoice ? invoice : null}
+                        />                        <Form.Group className="mb-3">
                             <Form.Label className="fw-bold">Currency:</Form.Label>
                             <Form.Select
                                 onChange={(e) => setState({ ...state, currency: e.target.value })}

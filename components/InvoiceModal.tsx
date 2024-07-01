@@ -1,185 +1,131 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import Table from "react-bootstrap/Table";
-import Modal from "react-bootstrap/Modal";
-import { InvoiceItem } from "@/types/invoice";
-import { GenerateInvoice } from "@/lib/GenerateInvoicePrint";
-
+import { Modal, Card, Row, Col, Table, Button } from "react-bootstrap";
+import { useRouter } from 'next/navigation';
+import { Invoice } from "@/types/invoice";
+import { createInvoice } from "@/actions/invoices";
 
 interface InvoiceModalProps {
     showModal: boolean;
     closeModal: () => void;
-    info: {
-        billFrom?: string;
-        invoiceNumber?: string;
-        billFromAddress?: string;
-        billFromEmail?: string;
-        billTo?: string;
-        billToAddress?: string;
-        billToEmail?: string;
-        dateOfIssue?: string;
-        notes?: string;
-    };
-    currency: string;
-    total: string;
-    items: InvoiceItem[],
-    taxAmount: string;
-    discountAmount: string;
-    subTotal: string;
-    // items: {
-    //     quantity: number;
-    //     name: string;
-    //     description: string;
-    //     price: number;
-    // }[];
+    invoice: Invoice | null;
 }
 
 const InvoiceModal: React.FC<InvoiceModalProps> = ({
     showModal,
     closeModal,
-    info,
-    currency,
-    total,
-    items,
-    taxAmount,
-    discountAmount,
-    subTotal,
+    invoice
 }) => {
+    const router = useRouter();
+
+    if (!invoice) {
+        return null
+    }
+
+    const handleSaveInvoice = async () => {
+        try {
+            await createInvoice(invoice);
+            closeModal();
+            router.push(`/invoices/${invoice.invoiceNumber}`);
+        } catch (error) {
+            console.error("Error saving invoice:", error);
+        }
+    };
+
     return (
-        <div>
-            <Modal show={showModal} onHide={closeModal} size="lg" centered>
-                <div id="invoiceCapture">
-                    <div className="d-flex flex-row justify-content-between align-items-start bg-light w-100 p-4">
-                        <div className="w-100">
-                            <h4 className="fw-bold my-2">{info.billFrom || "John Uberbacher"}</h4>
-                            <h6 className="fw-bold text-secondary mb-1">Invoice Number: {info.invoiceNumber || ""}</h6>
+        <Modal show={showModal} onHide={closeModal} size="lg" centered>
+            <Modal.Body>
+                <Card id="invoiceCapture" className="p-4 my-3">
+                    <div className="d-flex flex-row align-items-start justify-content-between mb-3">
+                        <div className="d-flex flex-column">
+                            <div className="mb-2">
+                                <span className="fw-bold">Date of Issue:&nbsp;</span>
+                                <span>{invoice.dateOfIssue}</span>
+                            </div>
                         </div>
-                        <div className="text-end ms-4">
-                            <h6 className="fw-bold mt-1 mb-2">Amount&nbsp;Due:</h6>
-                            <h5 className="fw-bold text-secondary">
-                                {" "}
-                                {currency} {total}
-                            </h5>
+                        <div className="d-flex flex-row align-items-center">
+                            <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
+                            <span>{invoice.invoiceNumber}</span>
                         </div>
                     </div>
-                    <div className="p-4">
-                        <Row className="mb-4">
-                            <Col md={4}>
-                                <div className="fw-bold">Billed From:</div>
-                                <div>{info.billFrom || ""}</div>
-                                <div>{info.billFromAddress || ""}</div>
-                                <div>{info.billFromEmail || ""}</div>
-                            </Col>
-                            <Col md={4}>
-                                <div className="fw-bold">Billed to:</div>
-                                <div>{info.billTo || ""}</div>
-                                <div>{info.billToAddress || ""}</div>
-                                <div>{info.billToEmail || ""}</div>
-                            </Col>
-                            <Col md={4}>
-                                <div className="fw-bold mt-2">Date Of Issue:</div>
-                                <div>{info.dateOfIssue || ""}</div>
-                            </Col>
-                        </Row>
-                        <Table className="mb-0">
-                            <thead>
-                                <tr>
-                                    <th>QTY</th>
-                                    <th>DESCRIPTION</th>
-                                    <th className="text-end">PRICE</th>
-                                    <th className="text-end">AMOUNT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {items.map((item, i) => {
-                                    return (
-                                        <tr id={i.toString()} key={i}>
-                                            <td style={{ width: "70px" }}>{item.quantity}</td>
-                                            <td>
-                                                {item.name} - {item.description}
-                                            </td>
-                                            <td className="text-end" style={{ width: "100px" }}>
-                                                {currency} {item.price}
-                                            </td>
-                                            <td className="text-end" style={{ width: "100px" }}>
-                                                {currency} {Number(item.price) * item.quantity}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
-                        <Table>
-                            <tbody>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                                <tr className="text-end">
-                                    <td></td>
-                                    <td className="fw-bold" style={{ width: "100px" }}>
-                                        SUBTOTAL
-                                    </td>
-                                    <td className="text-end" style={{ width: "100px" }}>
-                                        {currency} {subTotal}
-                                    </td>
-                                </tr>
-                                {parseFloat(taxAmount) !== 0.0 && (
-                                    <tr className="text-end">
-                                        <td></td>
-                                        <td className="fw-bold" style={{ width: "100px" }}>
-                                            TAX
-                                        </td>
-                                        <td className="text-end" style={{ width: "100px" }}>
-                                            {currency} {taxAmount}
-                                        </td>
-                                    </tr>
-                                )}
-                                {parseFloat(discountAmount) !== 0.0 && (
-                                    <tr className="text-end">
-                                        <td></td>
-                                        <td className="fw-bold" style={{ width: "100px" }}>
-                                            DISCOUNT
-                                        </td>
-                                        <td className="text-end" style={{ width: "100px" }}>
-                                            {currency} {discountAmount}
-                                        </td>
-                                    </tr>
-                                )}
-                                <tr className="text-end">
-                                    <td></td>
-                                    <td className="fw-bold" style={{ width: "100px" }}>
-                                        TOTAL
-                                    </td>
-                                    <td className="text-end" style={{ width: "100px" }}>
-                                        {currency} {total}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                        {info.notes && <div className="bg-light py-3 px-4 rounded">{info.notes}</div>}
-                    </div>
-                </div>
-                <div className="pb-4 px-4">
-                    <Row>
-                        <Col md={6}>
-                            <Button variant="outline-primary" onClick={closeModal}>
-                                Save Invoice
-                            </Button>
+                    <hr className="my-4" />
+                    <Row className="mb-5">
+                        <Col>
+                            <h6 className="fw-bold">Bill from:</h6>
+                            <div>{invoice.billFrom.name}</div>
+                            <div>{invoice.billFrom.email}</div>
+                            <div>{invoice.billFrom.address}</div>
                         </Col>
-                        <Col md={6}>
-                            <GenerateInvoice />
+                        <Col>
+                            <h6 className="fw-bold">Bill to:</h6>
+                            <div>{invoice.billTo.name}</div>
+                            <div>{invoice.billTo.email}</div>
+                            <div>{invoice.billTo.address}</div>
                         </Col>
                     </Row>
-                </div>
-            </Modal>
-        </div>
+                    <Table striped bordered>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {invoice.items.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.name}</td>
+                                    <td>{item.description}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>{invoice.currency}{item.price}</td>
+                                    <td>{invoice.currency}{(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Row className="mt-4 justify-content-end">
+                        <Col lg={6}>
+                            <div className="d-flex flex-row align-items-start justify-content-between">
+                                <span className="fw-bold">Subtotal:</span>
+                                <span>{invoice.currency}{invoice.subTotal}</span>
+                            </div>
+                            <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+                                <span className="fw-bold">Discount:</span>
+                                <span>
+                                    <span className="small">({invoice.discountRate}%)</span>
+                                    {invoice.currency}{invoice.discountAmount}
+                                </span>
+                            </div>
+                            <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+                                <span className="fw-bold">Tax:</span>
+                                <span>
+                                    <span className="small">({invoice.taxRate}%)</span>
+                                    {invoice.currency}{invoice.taxAmount}
+                                </span>
+                            </div>
+                            <hr />
+                            <div className="d-flex flex-row align-items-start justify-content-between" style={{ fontSize: "1.125rem" }}>
+                                <span className="fw-bold">Total:</span>
+                                <span className="fw-bold">{invoice.currency}{invoice.total}</span>
+                            </div>
+                        </Col>
+                    </Row>
+                    <hr className="my-4" />
+                    <h6 className="fw-bold">Notes:</h6>
+                    <p>{invoice.notes}</p>
+                </Card>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={closeModal}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={handleSaveInvoice}>
+                    Save Invoice
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };
 
 export default InvoiceModal;
-
