@@ -54,7 +54,7 @@ export default function Home() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-start p-24 gap-5">
+        <main className="flex min-h-screen flex-col items-center justify-start p-24 py-4 gap-5">
             <div className="z-10 w-full items-center justify-between font-mono text-sm lg:flex">
                 <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 text-gray-900 font-bold pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800  dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border bg-gray-200-900 lg:p-4 ">
                     {user.email}
@@ -64,7 +64,7 @@ export default function Home() {
                         className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
                         href="/create"
                     >
-                        <Button className="bg-green-950 hover:bg-green-900 font-semibold">Create Invoice</Button>
+                        <Button className="bg-zinc-900 hover:bg-zinc-800 font-semibold">Create Invoice</Button>
                     </a>
                 </div>
             </div>

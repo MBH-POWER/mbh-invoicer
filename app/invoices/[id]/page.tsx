@@ -51,7 +51,7 @@ export default function InvoicePage({ params }: Props) {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-2">
             <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4">
                 <div className="d-flex flex-row align-items-start justify-content-between mb-3">
                     <div className="d-flex flex-column">
