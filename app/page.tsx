@@ -82,8 +82,6 @@ export default function Home() {
                             <TableHead>Subtotal</TableHead>
                             <TableHead>Tax Rate</TableHead>
                             <TableHead>Tax Amount</TableHead>
-                            <TableHead>Discount Rate</TableHead>
-                            <TableHead>Discount Amount</TableHead>
                             <TableHead className="text-right">Total</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -105,8 +103,6 @@ export default function Home() {
                                 <TableCell>{invoice.subTotal}</TableCell>
                                 <TableCell>{invoice.taxRate}</TableCell>
                                 <TableCell>{invoice.taxAmount}</TableCell>
-                                <TableCell>{invoice.discountRate}</TableCell>
-                                <TableCell>{invoice.discountAmount}</TableCell>
                                 <TableCell className="text-right">{invoice.total}</TableCell>
                             </TableRow>
                         ))}
