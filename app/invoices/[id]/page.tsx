@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { getInvoiceById } from '@/actions/invoices'
 import { Invoice } from '@/types/invoice'
 import { Card, Row, Col, Table } from 'react-bootstrap'
-import { BiCloudDownload } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { generateInvoiceNumber } from '@/lib/utils'
+//import { Card } from '@/components/ui/card'
 
 interface Props {
     params: { id: string }
@@ -52,7 +53,7 @@ export default function InvoicePage({ params }: Props) {
 
     return (
         <div className="container mt-2">
-            <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4">
+            <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4 rounded-xl">
                 <div className="d-flex flex-row align-items-start justify-content-between mb-3">
                     <div className="d-flex flex-column">
                         <div className="d-flex flex-column">
@@ -62,9 +63,9 @@ export default function InvoicePage({ params }: Props) {
                             </div>
                         </div>
                     </div>
-                    <div className="d-flex flex-row align-items-center">
-                        <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
-                        <span>{invoice.invoiceNumber}</span>
+                    <div className="mb-2">
+                        <span className="fw-bold">Invoice Number:&nbsp;</span>
+                        <span>{generateInvoiceNumber(String(invoice.invoiceNumber))}</span>
                     </div>
                 </div>
                 <hr className="my-4" />
@@ -135,12 +136,12 @@ export default function InvoicePage({ params }: Props) {
                 <h6 className="fw-bold">Notes:</h6>
                 <p>{invoice.notes}</p>
             </Card>
-            <div className="mt-4 mb-4">
-                <button className="btn btn-primary py-3 d-block w-100" onClick={generateInvoice}>
+            <div className="mt-4 mb-4 flex items-center justify-center gap-2">
+                <button
+                    className=" text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm disabled:bg-zinc-500 " disabled
+                > Edit </button>
+                <button className="text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm" onClick={generateInvoice}>
                     Download Invoice PDF
-                    {/*
-                        <BiCloudDownload style={{ width: "16px", height: "16px", marginTop: "-3px" }} className="me-2" />
-                        */}
                 </button>
             </div>
         </div>
