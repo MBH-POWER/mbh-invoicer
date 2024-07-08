@@ -65,7 +65,7 @@ export default function InvoicePage({ params }: Props) {
                     </div>
                     <div className="mb-2">
                         <span className="fw-bold">Invoice Number:&nbsp;</span>
-                        <span>{generateInvoiceNumber(String(invoice.invoiceNumber))}</span>
+                        <span>{generateInvoiceNumber(invoice.dateOfIssue , String(invoice.invoiceNumber))}</span>
                     </div>
                 </div>
                 <hr className="my-4" />
