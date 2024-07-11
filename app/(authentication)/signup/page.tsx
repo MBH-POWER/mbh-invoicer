@@ -3,9 +3,10 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
+import axios from "axios"
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -16,7 +17,6 @@ export default function Register() {
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
-
         setError("");
 
         if (password !== confirmation) {
@@ -25,6 +25,12 @@ export default function Register() {
         }
 
         try {
+            const res = await axios.post("/api/auth", { email })
+            const data = res.data
+            if (!data.allowed) {
+                setError("This email is not authorized to access the application");
+                return;
+            }
             await createUserWithEmailAndPassword(auth, email, password);
             router.push("/signin");
         } catch (e) {
