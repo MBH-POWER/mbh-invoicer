@@ -5,7 +5,7 @@ import { auth } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Invoice } from "@/types/invoice";
-import { GetInvoicesWithPagination, getAllInvoices } from "@/actions/invoices";
+import { GetInvoicesWithPagination } from "@/actions/invoices";
 import {
     Table,
     TableBody,
@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation";
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -36,7 +35,6 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-
     useEffect(() => {
         const fetchInvoices = async () => {
             const result = await GetInvoicesWithPagination(PAGE_SIZE);
@@ -51,18 +49,6 @@ export default function Home() {
             fetchInvoices();
         }
     }, [user]);
-
-    // useEffect(() => {
-    //     const fetchInvoices = async () => {
-    //         const invoices = await getAllInvoices();
-    //         console.log(invoices);
-    //         setInvoices(invoices);
-    //     };
-    //
-    //     if (user) {
-    //         fetchInvoices();
-    //     }
-    // }, [user]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -112,7 +98,7 @@ export default function Home() {
                 </p>
                 <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
                     <a
-                        className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
+                        className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0 no-underline"
                         href="/create"
                     >
                         <Button className="bg-zinc-900 hover:bg-zinc-800 font-semibold">Create Invoice</Button>
@@ -160,7 +146,7 @@ export default function Home() {
                     </TableBody>
                 </Table>
             </div>
-            <Pagination>
+            <Pagination className="no-underline">
                 <PaginationContent>
                     <PaginationItem className="cursor-pointer">
                         {
