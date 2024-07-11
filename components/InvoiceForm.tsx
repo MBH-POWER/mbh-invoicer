@@ -13,6 +13,7 @@ import { useAuth } from "@/store/authStore";
 import { createInvoice, getLastInvoice } from "@/actions/invoices";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { amountToWords } from "@/lib/utils";
 
 interface InvoiceItem {
     id: string;
@@ -354,6 +355,10 @@ const InvoiceForm: React.FC = () => {
                                 </div>
                             </Col>
                         </Row>
+                        <hr className="my-2" />
+                        <div className="w-full p-2 flex justify-end items-center">
+                            <p className="font-semibold tracking-tight">{amountToWords(Number(state.total))}</p>
+                        </div>
                         <hr className="my-4" />
                         <Form.Label className="fw-bold">Notes:</Form.Label>
                         <Form.Control

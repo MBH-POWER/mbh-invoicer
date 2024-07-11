@@ -3,6 +3,7 @@ import { Modal, Card, Row, Col, Table, Button } from "react-bootstrap";
 import { useRouter } from 'next/navigation';
 import { Invoice } from "@/types/invoice";
 import { createInvoice } from "@/actions/invoices";
+import { amountToWords } from "@/lib/utils";
 
 interface InvoiceModalProps {
     showModal: boolean;
@@ -34,7 +35,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
     return (
         <Modal show={showModal} onHide={closeModal} size="lg" centered>
             <Modal.Body>
-                <Card id="invoiceCapture" className="p-4 my-3">
+                <Card id="invoiceCapture" className="p-4 my-3 ">
                     <div className="d-flex flex-row align-items-start justify-content-between mb-3">
                         <div className="d-flex flex-column">
                             <div className="mb-2">
@@ -105,13 +106,17 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                                 </span>
                             </div>
                             <hr />
-                            <div className="d-flex flex-row align-items-start justify-content-between" style={{ fontSize: "1.125rem" }}>
+                            <div className=" d-flex flex-row align-items-start justify-content-between" style={{ fontSize: "1.125rem" }}>
                                 <span className="fw-bold">Total:</span>
                                 <span className="fw-bold">{invoice.currency}{invoice.total}</span>
                             </div>
                         </Col>
                     </Row>
-                    <hr className="my-4" />
+                    <hr className="mt-3" />
+                    <div className="w-full p-2 flex justify-end items-center bg-gray-200">
+                        <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
+                    </div>
+                    <hr className="mt-0 mb-3" />
                     <h6 className="fw-bold">Notes:</h6>
                     <p>{invoice.notes}</p>
                 </Card>

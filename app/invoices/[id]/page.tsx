@@ -6,7 +6,7 @@ import { Card, Row, Col, Table } from 'react-bootstrap'
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { generateInvoiceNumber } from '@/lib/utils'
+import { amountToWords, generateInvoiceNumber } from '@/lib/utils'
 //import { Card } from '@/components/ui/card'
 
 interface Props {
@@ -65,7 +65,7 @@ export default function InvoicePage({ params }: Props) {
                     </div>
                     <div className="mb-2">
                         <span className="fw-bold">Invoice Number:&nbsp;</span>
-                        <span>{generateInvoiceNumber(invoice.dateOfIssue , String(invoice.invoiceNumber))}</span>
+                        <span>{generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))}</span>
                     </div>
                 </div>
                 <hr className="my-4" />
@@ -132,6 +132,9 @@ export default function InvoicePage({ params }: Props) {
                         </div>
                     </Col>
                 </Row>
+                <div className='py-3 px-1 w-full my-2 flex justify-end items-center bg-gray-200'>
+                    <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
+                </div>
                 <hr className="my-4" />
                 <h6 className="fw-bold">Notes:</h6>
                 <p>{invoice.notes}</p>
