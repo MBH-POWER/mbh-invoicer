@@ -1,34 +1,69 @@
 import { database as db } from "@/lib/firebase";
 import { Invoice } from "@/types/invoice";
-import firebase from "firebase/compat/app";
-import { collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy, where, Query } from "firebase/firestore";
-
-// export const getInvoicesWithPagination = async (pageSize: number, lastVisible?: any) => {
+import { startAfter, collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy, Query, QueryDocumentSnapshot } from "firebase/firestore";
+//
+// export const getInvoicesWithPagination = async (pageSize: number, lastVisible?: QueryDocumentSnapshot<Invoice>) => {
 //     try {
 //         const invoicesRef = collection(db, "invoices");
-//         let invoicesQuery;
+//         let invoicesQuery: Query<Invoice>;
 //
 //         if (lastVisible) {
-//             invoicesQuery = query(invoicesRef, orderBy("createdAt"), startAfter(lastVisible), limit(pageSize));
+//             invoicesQuery = query<Invoice>(
+//                 invoicesRef,
+//                 orderBy("createdAt", "desc"),
+//                 startAfter(lastVisible),
+//                 limit(pageSize)
+//             );
 //         } else {
-//             invoicesQuery = query(invoicesRef, orderBy("createdAt"), limit(pageSize));
+//             invoicesQuery = query<Invoice>(
+//                 invoicesRef,
+//                 orderBy("createdAt", "desc"),
+//                 limit(pageSize)
+//             );
 //         }
 //
 //         const invoiceSnapshot = await getDocs(invoicesQuery);
-//         const invoices: Invoice[] = [];
-//         invoiceSnapshot.forEach((doc) => {
-//             invoices.push(doc.data() as Invoice);
-//         });
+//         const invoices: Invoice[] = invoiceSnapshot.docs.map(doc => ({
+//             id: doc.id,
+//             ...doc.data()
+//         }));
 //
 //         const lastVisibleDoc = invoiceSnapshot.docs[invoiceSnapshot.docs.length - 1];
 //
-//         console.log("Invoices fetched: ", invoices);
 //         return { invoices, lastVisible: lastVisibleDoc };
 //     } catch (error) {
 //         console.error("Error getting invoices with pagination: ", error);
 //         return { invoices: [], lastVisible: null };
 //     }
 // };
+//
+
+export const GetInvoicesWithPagination = async (pageSize: number, lastVisible?: any) => {
+    try {
+        const invoicesRef = collection(db, "invoices");
+        let invoicesQuery;
+
+        if (lastVisible) {
+            invoicesQuery = query(invoicesRef, orderBy("createdAt","desc"), startAfter(lastVisible), limit(pageSize));
+        } else {
+            invoicesQuery = query(invoicesRef, orderBy("createdAt", "desc"), limit(pageSize));
+        }
+
+        const invoiceSnapshot = await getDocs(invoicesQuery);
+        const invoices: Invoice[] = [];
+        invoiceSnapshot.forEach((doc) => {
+            invoices.push(doc.data() as Invoice);
+        });
+
+        const lastVisibleDoc = invoiceSnapshot.docs[invoiceSnapshot.docs.length - 1];
+
+        console.log("Invoices fetched: ", invoices);
+        return { invoices, lastVisible: lastVisibleDoc };
+    } catch (error) {
+        console.error("Error getting invoices with pagination: ", error);
+        return { invoices: [], lastVisible: null };
+    }
+};
 
 export const getLastInvoice = async (): Promise<Invoice | null> => {
     try {
@@ -76,7 +111,7 @@ export const createInvoice = async (invoice: Invoice) => {
     }
 };
 
-export const getInvoiceById = async (invoiceId: string):Promise<Invoice | null> => {
+export const getInvoiceById = async (invoiceId: string): Promise<Invoice | null> => {
     try {
         const invoiceDocRef = doc(db, "invoices", String(invoiceId));
         const invoiceDocSnap = await getDoc(invoiceDocRef);

@@ -5,7 +5,7 @@ import { auth } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Invoice } from "@/types/invoice";
-import { getAllInvoices } from "@/actions/invoices";
+import { GetInvoicesWithPagination, getAllInvoices } from "@/actions/invoices";
 import {
     Table,
     TableBody,
@@ -15,23 +15,54 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
+import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+
+const PAGE_SIZE = 10;
 
 export default function Home() {
     const router = useRouter();
     const { setUser, user } = useAuth();
     const [invoices, setInvoices] = useState<Invoice[]>([]);
+    const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+
 
     useEffect(() => {
         const fetchInvoices = async () => {
-            const invoices = await getAllInvoices();
-            console.log(invoices);
-            setInvoices(invoices);
+            const result = await GetInvoicesWithPagination(PAGE_SIZE);
+            setInvoices(result.invoices);
+            if (result.lastVisible) {
+                setLastVisible(result.lastVisible);
+            }
+            setHasMore(result.invoices.length === PAGE_SIZE);
         };
 
         if (user) {
             fetchInvoices();
         }
     }, [user]);
+
+    // useEffect(() => {
+    //     const fetchInvoices = async () => {
+    //         const invoices = await getAllInvoices();
+    //         console.log(invoices);
+    //         setInvoices(invoices);
+    //     };
+    //
+    //     if (user) {
+    //         fetchInvoices();
+    //     }
+    // }, [user]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -47,6 +78,26 @@ export default function Home() {
 
     const handleInvoiceClick = (invoiceId: string) => {
         router.push(`/invoices/${invoiceId}`);
+    };
+
+    const handleNextPage = async () => {
+        if (hasMore && lastVisible) {
+            const result = await GetInvoicesWithPagination(PAGE_SIZE, lastVisible);
+            setInvoices(result.invoices);
+            setLastVisible(result.lastVisible);
+            setCurrentPage(currentPage + 1);
+            setHasMore(result.invoices.length === PAGE_SIZE);
+        }
+    };
+
+    const handlePreviousPage = async () => {
+        if (currentPage > 1) {
+            const result = await GetInvoicesWithPagination(PAGE_SIZE * (currentPage - 1));
+            setInvoices(result.invoices.slice(-PAGE_SIZE));
+            setLastVisible(result.lastVisible);
+            setCurrentPage(currentPage - 1);
+            setHasMore(true);
+        }
     };
 
     if (!user) {
@@ -75,7 +126,7 @@ export default function Home() {
                         <TableRow>
                             <TableHead className="w-[100px]">Invoice No</TableHead>
                             <TableHead>Date of Issue</TableHead>
-                            <TableHead>Assignee</TableHead>
+                            <TableHead className="hidden">Assignee</TableHead>
                             <TableHead>Bill From</TableHead>
                             <TableHead>Bill To</TableHead>
                             <TableHead>Items</TableHead>
@@ -90,7 +141,7 @@ export default function Home() {
                             <TableRow key={invoice.invoiceNumber} onClick={() => handleInvoiceClick(invoice.invoiceNumber.toString())} className="cursor-pointer">
                                 <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
                                 <TableCell>{invoice.dateOfIssue}</TableCell>
-                                <TableCell>{invoice.assignee?.email ?? "N/A"}</TableCell>
+                                <TableCell className="hidden" >{invoice.assignee?.email ?? "N/A"}</TableCell>
                                 <TableCell>{invoice.billFrom.name}</TableCell>
                                 <TableCell>{invoice.billTo.name}</TableCell>
                                 <TableCell>
@@ -109,6 +160,36 @@ export default function Home() {
                     </TableBody>
                 </Table>
             </div>
+            <Pagination>
+                <PaginationContent>
+                    <PaginationItem className="cursor-pointer">
+                        {
+                            !(currentPage == 1) && (
+                                <PaginationPrevious onClick={handlePreviousPage} />
+                            )
+                        }
+                    </PaginationItem>
+                    <PaginationItem className="cursor-pointer">
+                        <PaginationLink>{currentPage}</PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem className="cursor-pointer">
+                        {
+                            hasMore && (
+                                <PaginationLink onClick={handleNextPage}>
+                                    {currentPage + 1}
+                                </PaginationLink>
+                            )
+                        }
+                    </PaginationItem>
+                    <PaginationItem className="cursor-pointer">
+                        {
+                            hasMore && (
+                                <PaginationNext onClick={handleNextPage} />
+                            )
+                        }
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
         </main>
     );
 }
