@@ -2,7 +2,7 @@
 import { useAuth } from '@/store/authStore'
 import { useRouter } from 'next/navigation'
 
-export default function page() {
+export default function Page() {
 
     const router = useRouter()
     const { user, logOut } = useAuth()
