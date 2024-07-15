@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 const whitelist = [
     'example.com',
     'alloweduser@gmail.com',
-    'sijibomi@gmail.com'
+    'sijibomi@gmail.com',
+    'gbemilesanmi@gmail.com',
+    'agidi.shetua@mbhpower.com'
 ];
 
 export async function POST(request: NextRequest) {
