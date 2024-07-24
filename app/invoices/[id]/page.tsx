@@ -1,3 +1,4 @@
+// saved page previewed for download
 "use client"
 import React, { useEffect, useState } from 'react'
 import { getInvoiceById } from '@/actions/invoices'
@@ -52,7 +53,7 @@ export default function InvoicePage({ params }: Props) {
     }
 
     return (
-        <div className="container mt-2">
+        <div className="container mt-5">
             <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4 rounded-xl">
                 <div className="d-flex flex-row align-items-start justify-content-between mb-3">
                     <div className="d-flex flex-column">
@@ -73,7 +74,7 @@ export default function InvoicePage({ params }: Props) {
                     <Col>
                         <h6 className="fw-bold">Bill from:</h6>
                         <div>{invoice.billFrom.name}</div>
-                        <div>{invoice.billFrom.email}</div>
+                        <div>{invoice.billFrom.email || ''}</div>
                         <div>{invoice.billFrom.address}</div>
                     </Col>
                     <Col>
@@ -136,8 +137,25 @@ export default function InvoicePage({ params }: Props) {
                     <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
                 </div>
                 <hr className="my-4" />
+                <h6 className="fw-bold">Payment Terms:</h6>
+                <p>{invoice.paymentPlan}</p>
+                
+                {/* commented this out so notes won't be printed out in the
+                hard copy */}
+                {/* <hr className="my-4" />
                 <h6 className="fw-bold">Notes:</h6>
-                <p>{invoice.notes}</p>
+                <p>{invoice.notes}</p> */}
+                <hr />
+
+                
+                <div className="row justify-content-around mt-5">
+                            <div className="col-4">
+                            <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                             </div>
+                            <div className="col-4">
+                            <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                            </div>
+                </div>
             </Card>
             <div className="mt-4 mb-4 flex items-center justify-center gap-2">
                 <button

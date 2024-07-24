@@ -1,4 +1,4 @@
-// authStore.ts
+// // authStore.ts
 import create from 'zustand';
 import { User } from 'firebase/auth';
 import { persist, createJSONStorage } from 'zustand/middleware';
@@ -30,3 +30,6 @@ export const useAuth = create<UserDataStore>()(
 		},
 	),
 );
+
+
+

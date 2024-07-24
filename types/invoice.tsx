@@ -25,7 +25,9 @@ export interface Invoice {
         address: string;
     };
     items: InvoiceItem[];
+    paymentPlan: string;
     notes: string;
+    // sign: string;
     currency: string;
     subTotal: string;
     taxRate: string;

@@ -5,7 +5,9 @@ const whitelist = [
     'sijibomi@gmail.com',
     'gbemilesanmi@gmail.com',
     'agidi.shetua@mbhpower.com',
-    'agidi.shetu@mbhpower.com'
+    'agidi.shetu@mbhpower.com',
+    'oginniemmanuel040@gmail.com',
+    'oginniemmanuel@outlook.com'
 ];
 
 export async function POST(request: NextRequest) {

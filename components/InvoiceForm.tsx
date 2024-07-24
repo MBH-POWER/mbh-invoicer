@@ -1,3 +1,4 @@
+// Main page to create invoice
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Row from "react-bootstrap/Row";
@@ -45,6 +46,7 @@ const InvoiceForm: React.FC = () => {
         taxAmount: "0.00",
         discountRate: 0,
         discountAmount: "0.00",
+        paymentPlan: "100% Payment Received",
         items: [
             {
                 id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
@@ -181,7 +183,9 @@ const InvoiceForm: React.FC = () => {
                 email: state.billFromEmail,
                 address: state.billFromAddress,
             },
+            paymentPlan: state.paymentPlan,
             notes: state.notes,
+            // sign: state.sign,
             dateOfIssue: state.dateOfIssue,
             total: state.total,
             taxRate: String(state.taxRate),
@@ -195,6 +199,7 @@ const InvoiceForm: React.FC = () => {
         setInvoce(invoice)
         setIsOpen(true);
     };
+
 
     const closeModal = () => {
         setIsOpen(false);
@@ -262,7 +267,7 @@ const InvoiceForm: React.FC = () => {
                                     className="my-2"
                                     onChange={handleChange("billFromEmail")}
                                     autoComplete="email"
-                                    required
+                                    // required
                                 />
                                 <Form.Control
                                     placeholder="Billing address"
@@ -296,7 +301,7 @@ const InvoiceForm: React.FC = () => {
                                     className="my-2"
                                     onChange={handleChange("billToEmail")}
                                     autoComplete="email"
-                                    required
+                                    // required
                                 />
                                 <Form.Control
                                     placeholder="Billing address"
@@ -360,6 +365,17 @@ const InvoiceForm: React.FC = () => {
                             <p className="font-semibold tracking-tight">{amountToWords(Number(state.total))}</p>
                         </div>
                         <hr className="my-4" />
+                        <Form.Label className="fw-bold">Payment Terms:</Form.Label>
+                        <Form.Control
+                            placeholder="100% Payment Received"
+                            name="paymentPlan"
+                            value={state.paymentPlan}
+                            onChange={handleChange("paymentPlan")}
+                            as="textarea"
+                            className="my-2"
+                            rows={1}
+                        />
+                        <hr className="my-4" />
                         <Form.Label className="fw-bold">Notes:</Form.Label>
                         <Form.Control
                             placeholder="Thank you for doing business with us. Have a great day!"
@@ -370,6 +386,16 @@ const InvoiceForm: React.FC = () => {
                             className="my-2"
                             rows={1}
                         />
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+                        <div className="row justify-content-around">
+                            <div className="col-4">
+                            <Form.Label className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</Form.Label>
+                             </div>
+                            <div className="col-4">
+                            <Form.Label className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</Form.Label>
+                            </div>
+                        </div>
                     </Card>
                 </Col>
                 <Col md={4} lg={3}>
@@ -393,6 +419,20 @@ const InvoiceForm: React.FC = () => {
                                 <option value="$">CAD (Canadian Dollar)</option>
                             </Form.Select>
                         </Form.Group>
+                        {/* <Form.Group className="mb-3">
+                            <Form.Label className="fw-bold">Wth Tax</Form.Label>
+                            <Form.Select
+                                onChange={(e) => setState({ ...state, currency: e.target.value })}
+                                className="btn btn-light my-1"
+                                aria-label="Change Currency"
+                            >
+                                <option value="%">100% </option>
+                                <option value="%">75% </option>
+                                <option value="%">50% </option>
+                                <option value="%">25% </option>
+                                <option value="%">0% </option>
+                            </Form.Select>
+                        </Form.Group> */}
                         <Form.Group className="my-3">
                             <Form.Label className="fw-bold">Tax rate:</Form.Label>
                             <InputGroup className="my-1 flex-nowrap">

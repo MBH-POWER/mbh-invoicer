@@ -1,7 +1,8 @@
 import { database as db } from "@/lib/firebase";
 import { Invoice } from "@/types/invoice";
 import { startAfter, collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy, Query, QueryDocumentSnapshot } from "firebase/firestore";
-//
+
+
 // export const getInvoicesWithPagination = async (pageSize: number, lastVisible?: QueryDocumentSnapshot<Invoice>) => {
 //     try {
 //         const invoicesRef = collection(db, "invoices");

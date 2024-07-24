@@ -1,3 +1,4 @@
+// Preview page before saving
 import React from "react";
 import { Modal, Card, Row, Col, Table, Button } from "react-bootstrap";
 import { useRouter } from 'next/navigation';
@@ -117,8 +118,23 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                         <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
                     </div>
                     <hr className="mt-0 mb-3" />
+                    <h6 className="fw-bold">Payment Terms:</h6>
+                    <p>{invoice.paymentPlan}</p>
+
+                    <hr className="mt-0 mb-3" />
                     <h6 className="fw-bold">Notes:</h6>
                     <p>{invoice.notes}</p>
+
+
+                    <hr className="mt-0 mb-3" />
+                    <div className="row justify-content-around mt-5">
+                            <div className="col-4">
+                            <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                             </div>
+                            <div className="col-4">
+                            <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                            </div>
+                    </div>
                 </Card>
             </Modal.Body>
             <Modal.Footer>

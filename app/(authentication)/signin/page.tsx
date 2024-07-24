@@ -16,7 +16,7 @@ export default function Login() {
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
         setError("");
-
+ 
         try {
             const credential = await signInWithEmailAndPassword(
                 auth,
