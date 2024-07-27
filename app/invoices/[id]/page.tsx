@@ -53,13 +53,16 @@ export default function InvoicePage({ params }: Props) {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 p-4 fs-5">
+            <br />
+            <br />
+            <label className='fw-bold d-flex flex-row align-items-center justify-content-center'>INVOICE</label>
             <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4 rounded-xl">
                 <div className="d-flex flex-row align-items-start justify-content-between mb-3">
                     <div className="d-flex flex-column">
                         <div className="d-flex flex-column">
                             <div className="mb-2">
-                                <span className="fw-bold">Date of Issue:&nbsp;</span>
+                                <span className="fw-bolder">Issue Date:&nbsp;</span>
                                 <span>{invoice.dateOfIssue}</span>
                             </div>
                         </div>
@@ -72,13 +75,13 @@ export default function InvoicePage({ params }: Props) {
                 <hr className="my-4" />
                 <Row className="mb-5">
                     <Col>
-                        <h6 className="fw-bold">Bill from:</h6>
+                        <h6 className="fw-bold fs-5">Bill from:</h6>
                         <div>{invoice.billFrom.name}</div>
                         <div>{invoice.billFrom.email || ''}</div>
                         <div>{invoice.billFrom.address}</div>
                     </Col>
                     <Col>
-                        <h6 className="fw-bold">Bill to:</h6>
+                        <h6 className="fw-bold fs-5">Bill to:</h6>
                         <div>{invoice.billTo.name}</div>
                         <div>{invoice.billTo.email}</div>
                         <div>{invoice.billTo.address}</div>
@@ -128,16 +131,16 @@ export default function InvoicePage({ params }: Props) {
                         </div>
                         <hr />
                         <div className="d-flex flex-row align-items-start justify-content-between" style={{ fontSize: "1.125rem" }}>
-                            <span className="fw-bold">Total:</span>
-                            <span className="fw-bold">{invoice.currency}{invoice.total}</span>
+                            <span className="fw-bold fs-5 mb-3">Total:</span>
+                            <span className="fw-bold fs-5">{invoice.currency}{invoice.total}</span>
                         </div>
                     </Col>
                 </Row>
                 <div className='py-3 px-1 w-full my-2 flex justify-end items-center bg-gray-200'>
                     <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
                 </div>
-                <hr className="my-4" />
-                <h6 className="fw-bold">Payment Terms:</h6>
+                <hr />
+                <h6 className="fw-bold fs-5">Payment Terms:</h6>
                 <p>{invoice.paymentPlan}</p>
                 
                 {/* commented this out so notes won't be printed out in the
@@ -148,12 +151,12 @@ export default function InvoicePage({ params }: Props) {
                 <hr />
 
                 
-                <div className="row justify-content-around mt-5">
+                <div className="row justify-content-around mt-5 ft-5">
                             <div className="col-4">
-                            <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                            <h6 className="fw-bold fs-5">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
                              </div>
                             <div className="col-4">
-                            <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                            <h6 className="fw-bold fs-5">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
                             </div>
                 </div>
             </Card>
