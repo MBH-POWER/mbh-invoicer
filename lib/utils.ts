@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const generateInvoiceNumber = (dateOfIssue: string, invoiceNumber: string) => {
     const issueDate = parse(dateOfIssue, 'yyyy-MM-dd', new Date());
-    const formattedDate = format(issueDate, 'dd/MM/yy');
+    const formattedDate = format(issueDate, 'yyyy/MM');
     return `${formattedDate}/${invoiceNumber}`;
 };
 

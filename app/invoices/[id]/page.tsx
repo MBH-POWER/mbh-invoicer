@@ -143,8 +143,8 @@ export default function InvoicePage({ params }: Props) {
                 <h6 className="fw-bold fs-5">Payment Terms:</h6>
                 <p>{invoice.paymentPlan}</p>
                 
-                {/* commented this out so notes won't be printed out in the
-                hard copy */}
+                {/* commented this out so notes part of the create invoice won't be printed out in the
+                hard copy print out */}
                 {/* <hr className="my-4" />
                 <h6 className="fw-bold">Notes:</h6>
                 <p>{invoice.notes}</p> */}
