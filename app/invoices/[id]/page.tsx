@@ -165,7 +165,7 @@ export default function InvoicePage({ params }: Props) {
                     className=" text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm disabled:bg-zinc-500 " disabled
                 > Edit </button>
                 <button className="text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm" onClick={generateInvoice}>
-                    Download Invoice PDF
+                    Download Invoice PD
                 </button>
             </div>
         </div>
