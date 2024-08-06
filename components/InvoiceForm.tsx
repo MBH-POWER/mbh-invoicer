@@ -236,7 +236,7 @@ const InvoiceForm: React.FC = () => {
                                     type="number"
                                     value={state.invoiceNumber}
                                     name="invoiceNumber"
-                                    disabled
+                                    //disabled
                                     onChange={handleChange("invoiceNumber")}
                                     min="1"
                                     style={{ maxWidth: "70px" }}
