@@ -67,7 +67,7 @@ const Header = () => {
         <header className="bg-zinc-800 p-4 py-6 shadow-sm">
             <div className=" w-[99%] lg:w-[91%] mx-auto flex justify-between items-center">
                 <Link href="/" className="text-xl -tracking-wider font-extrabold text-gray-200 no-underline">
-                    Invoicer
+                    MBH Invoicer
                 </Link>
                 <div className="flex items-center space-x-4">
                     {user && (
