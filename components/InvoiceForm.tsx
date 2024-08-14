@@ -90,11 +90,8 @@ const InvoiceForm: React.FC = () => {
         const newSubTotal = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
             .toFixed(2);
         const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
-        // const newTaxAmount = ((parseFloat(newSubTotal) * taxRate) / 100).toFixed(2);
         const newTaxAmount = ((parseFloat(newSubTotal) - parseFloat(newDiscountAmount)) * taxRate / 100).toFixed(2)
         
-        
-        // const newTotall = parseFloat((newSubTotal - newTaxAmount)).toFixed(2);
 
 
         const newTotal = (
@@ -202,7 +199,6 @@ const InvoiceForm: React.FC = () => {
             dateOfIssue: state.dateOfIssue,
             total: state.total,
             taxRate: String(state.taxRate),
-            // taxRate:state.taxRate,
             invoiceNumber: state.invoiceNumber,
             subTotal: state.subTotal,
             discountRate: String(state.discountRate),
