@@ -1,3 +1,0 @@
-- [ ] create space for letterhead
-- [ ] add field for payment plan
-- [ ] add dynamic invoice page

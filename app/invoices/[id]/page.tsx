@@ -150,6 +150,14 @@ export default function InvoicePage({ params }: Props) {
                 <p>{invoice.notes}</p> */}
                 <hr />
 
+                <div>
+                    <h6>Payment Details - Pls Use MBH POWER LIMITED</h6>
+                    <h6 className='fw-bold'>TIN - 00277867-0001</h6>
+                    <h6 className="fw-bold">VAT Reg No - IKV06002380240</h6>
+                    <h6 className="fw-bold">Bank Details- United Bank for Africa (UBA) - 1016337483</h6>
+                    <h6 className="fw-bold">Account Name: MBH Power Ltd. Sort Code: 033152420</h6>
+                </div>
+
                 
                 <div className="row justify-content-around mt-5 ft-5">
                             <div className="col-4">
@@ -165,7 +173,7 @@ export default function InvoicePage({ params }: Props) {
                     className=" text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm disabled:bg-zinc-500 " disabled
                 > Edit </button>
                 <button className="text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm" onClick={generateInvoice}>
-                    Download Invoice PD
+                    Download Invoice PDF
                 </button>
             </div>
         </div>

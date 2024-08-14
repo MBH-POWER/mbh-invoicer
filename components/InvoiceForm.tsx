@@ -85,15 +85,20 @@ const InvoiceForm: React.FC = () => {
     }, [setUser]);
 
     const handleCalculateTotal = useCallback(() => {
-        const { items, taxRate, discountRate } = state;
 
-        const newSubTotal = items
-            .reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
+        const { items, taxRate, discountRate, } = state;
+        const newSubTotal = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
             .toFixed(2);
-        const newTaxAmount = ((parseFloat(newSubTotal) * taxRate) / 100).toFixed(2);
         const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
+        // const newTaxAmount = ((parseFloat(newSubTotal) * taxRate) / 100).toFixed(2);
+        const newTaxAmount = ((parseFloat(newSubTotal) - parseFloat(newDiscountAmount)) * taxRate / 100).toFixed(2)
+        
+        
+        // const newTotall = parseFloat((newSubTotal - newTaxAmount)).toFixed(2);
+
+
         const newTotal = (
-            parseFloat(newSubTotal) -
+            parseFloat(newSubTotal) - 
             parseFloat(newDiscountAmount) +
             parseFloat(newTaxAmount)
         ).toFixed(2);
@@ -105,7 +110,16 @@ const InvoiceForm: React.FC = () => {
             discountAmount: newDiscountAmount,
             total: newTotal,
         }));
+        console.log(`Subtotal: $${newSubTotal}`);
+        console.log(`Tax Amount: $${newTaxAmount}`);
+        console.log(`Discount Amount: $${newDiscountAmount}`);
+        console.log(`Total: $${newTotal}`);
+
+
     }, [state.items, state.taxRate, state.discountRate]);
+        
+
+ 
 
     useEffect(() => {
         handleCalculateTotal();
@@ -185,10 +199,10 @@ const InvoiceForm: React.FC = () => {
             },
             paymentPlan: state.paymentPlan,
             notes: state.notes,
-            // sign: state.sign,
             dateOfIssue: state.dateOfIssue,
             total: state.total,
             taxRate: String(state.taxRate),
+            // taxRate:state.taxRate,
             invoiceNumber: state.invoiceNumber,
             subTotal: state.subTotal,
             discountRate: String(state.discountRate),
@@ -207,6 +221,7 @@ const InvoiceForm: React.FC = () => {
 
     return (
         <Form onSubmit={openModal} className="text-sm">
+            {/* <div className='fw-bold d-flex flex-row align-items-center justify-content-center'>INVOICE</div> */}
             <Row>
                 <Col md={8} lg={9}>
                     <Card className="p-4 p-xl-5 my-3 my-xl-4">
