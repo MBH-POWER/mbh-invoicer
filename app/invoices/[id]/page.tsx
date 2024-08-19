@@ -91,7 +91,7 @@ export default function InvoicePage({ params }: Props) {
                     <thead>
                         <tr>
                             <th>Item</th>
-                            <th>Description</th>
+                            <th>Code</th>
                             <th>Quantity</th>
                             <th>Price</th>
                             <th>Amount</th>
@@ -101,7 +101,7 @@ export default function InvoicePage({ params }: Props) {
                         {invoice.items.map((item, index) => (
                             <tr key={index}>
                                 <td>{item.name}</td>
-                                <td>{item.description}</td>
+                                <td>{item.code}</td>
                                 <td>{item.quantity}</td>
                                 <td>{invoice.currency}{item.price}</td>
                                 <td>{invoice.currency}{(parseFloat(item.price) * item.quantity).toFixed(2)}</td>

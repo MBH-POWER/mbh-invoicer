@@ -6,23 +6,15 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
-import InvoiceItem from "@/components/InvoiceItem";
 import InvoiceModal from "@/components/InvoiceModal";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Invoice } from "@/types/invoice";
+import { Invoice, InvoiceItem } from "@/types/invoice";
 import { useAuth } from "@/store/authStore";
-import { createInvoice, getLastInvoice } from "@/actions/invoices";
+import { getLastInvoice } from "@/actions/invoices";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { amountToWords } from "@/lib/utils";
-
-interface InvoiceItem {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
-    quantity: number;
-}
+import InvoiceItemComponent from "./InvoiceItem";
 
 const InvoiceForm: React.FC = () => {
     const { user, setUser } = useAuth();
@@ -51,7 +43,7 @@ const InvoiceForm: React.FC = () => {
             {
                 id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
                 name: "",
-                description: "",
+                code: "",
                 price: "1.00",
                 quantity: 1,
             },
@@ -124,7 +116,7 @@ const InvoiceForm: React.FC = () => {
             id,
             name: "",
             price: "1.00",
-            description: "",
+            code: "",
             quantity: 1,
         };
         setState((prevState) => ({
@@ -315,7 +307,7 @@ const InvoiceForm: React.FC = () => {
                                 />
                             </Col>
                         </Row>
-                        <InvoiceItem
+                        <InvoiceItemComponent
                             onItemizedItemEdit={onItemizedItemEdit}
                             onRowAdd={handleAddEvent}
                             onRowDel={handleRowDel}

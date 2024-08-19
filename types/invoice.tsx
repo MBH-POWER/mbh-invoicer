@@ -4,7 +4,7 @@ import firebase from "firebase/compat/app";
 export interface InvoiceItem {
     id: string;
     name: string;
-    description: string;
+    code: string;
     price: string; // Assuming price is represented as a string for decimal precision
     quantity: number;
 }

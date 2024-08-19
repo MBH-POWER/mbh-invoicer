@@ -16,7 +16,7 @@ interface InvoiceItemProps {
     onRowAdd: () => void;
 }
 
-const InvoiceItem: React.FC<InvoiceItemProps> = ({ items, onItemizedItemEdit, currency, onRowDel, onRowAdd }) => {
+const InvoiceItemComponent: React.FC<InvoiceItemProps> = ({ items, onItemizedItemEdit, currency, onRowDel, onRowAdd }) => {
     return (
         <div>
             <Table>
@@ -76,9 +76,9 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                     onItemizedItemEdit={onItemizedItemEdit}
                     cellData={{
                         type: "text",
-                        name: "description",
-                        placeholder: "Item description",
-                        value: item.description,
+                        name: "code",
+                        placeholder: "Item Code",
+                        value: item.code,
                         id: item.id,
                     }}
                 />
@@ -123,5 +123,5 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
     );
 };
 
-export default InvoiceItem;
+export default InvoiceItemComponent;
 
