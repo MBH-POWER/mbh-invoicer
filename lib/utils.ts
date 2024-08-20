@@ -30,6 +30,7 @@ export function amountToWords(amount: number | string): string {
         }
         // Handle numbers from 100 to 999
         const hundred = Math.floor(num / 100);
+        
         const rest = num % 100;
         return units[hundred] + ' Hundred' + (rest !== 0 ? ' and ' + convertLessThanOneThousand(rest) : '');
     }
@@ -60,6 +61,7 @@ export function amountToWords(amount: number | string): string {
 
     const naira = Math.floor(numericAmount);
     const kobo = Math.round((numericAmount - naira) * 100);
+    
 
     let result = convert(naira);
     if (result === 'Zero' && kobo === 0) {
