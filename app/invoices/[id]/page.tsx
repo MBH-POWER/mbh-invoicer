@@ -11,6 +11,7 @@ import { amountToWords, generateInvoiceNumber } from '@/lib/utils'
 //import { Card } from '@/components/ui/card'
 import DeliveryNote from '@/components/DeliveryNote'
 
+
 // //state to control which view is currently active
 // const [activeView, setActiveView] = useState<'invoice' | 'deliveryNote'>('invoice')
 

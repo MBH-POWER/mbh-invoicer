@@ -31,7 +31,7 @@ const InvoiceForm: React.FC = () => {
         billFrom: "",
         billFromEmail: "",
         billFromAddress: "",
-        notes: "Thank you for doing business with mbhpower. Have a great day!",
+        notes: "",
         total: "0.00",
         subTotal: "0.00",
         taxRate: 7.5,
@@ -230,7 +230,7 @@ const InvoiceForm: React.FC = () => {
                                 </div>
                             </div>
                             <div className="d-flex flex-row align-items-center">
-                                <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
+                                <span className="fw-bold me-2">Invoice&nbsp;No:&nbsp;</span>
                                 <Form.Control
                                     type="number"
                                     value={state.invoiceNumber}
@@ -377,7 +377,7 @@ const InvoiceForm: React.FC = () => {
                         <hr className="my-4" />
                         <Form.Label className="fw-bold">Notes:</Form.Label>
                         <Form.Control
-                            placeholder="Thank you for doing business with us. Have a great day!"
+                            placeholder="Any extra Info for delivery note"
                             name="notes"
                             value={state.notes}
                             onChange={handleChange("notes")}

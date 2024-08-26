@@ -122,7 +122,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                     <p>{invoice.paymentPlan}</p>
 
                     <hr className="mt-0 mb-3" />
-                    <h6 className="fw-bold">Notes:</h6>
+                    <h6 className="fw-bold">Info:</h6>
                     <p>{invoice.notes}</p>
 
 

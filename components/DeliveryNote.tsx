@@ -7,9 +7,11 @@ import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { generateInvoiceNumber } from '@/lib/utils'
 
+
 interface Props {
-    invoiceId: string
+    invoiceId: string;
 }
+
 
 export default function DeliveryNote({ invoiceId }: Props) {
     const [invoice, setInvoice] = useState<Invoice | null>(null)
@@ -41,6 +43,7 @@ export default function DeliveryNote({ invoiceId }: Props) {
                 const topPadding = 80;
                 pdf.addImage(imgData, "PNG", 0, topPadding, pdfWidth, pdfHeight);
                 pdf.save(`delivery-note-${invoice?.invoiceNumber || '001'}.pdf`);
+
             });
         }
     };
@@ -99,6 +102,18 @@ export default function DeliveryNote({ invoiceId }: Props) {
                         ))}
                     </tbody>
                 </Table>
+                <br /><br />
+                {/* <hr className="mt-0 mb-3" />
+                    <h6 className="fw-bold">Info:</h6>
+                    <p>{invoice.notes}</p> */}
+                    {invoice.notes && (
+                        <>
+                        <hr className="mt-0 mb-3" />
+                        <h6 className="fw-bold">Info:</h6>
+                        <p>{invoice.notes}</p>
+                        </>
+                    )}
+
                 <br /><br /><br /><br /><br /><br /><br /><br />
                 
                 <div className="row justify-content-around mt-5 ft-5">
