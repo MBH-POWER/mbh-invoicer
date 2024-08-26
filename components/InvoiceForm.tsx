@@ -99,10 +99,6 @@ const InvoiceForm: React.FC = () => {
             discountAmount: newDiscountAmount,
             total: newTotal,
         }));
-        console.log(`Subtotal: $${newSubTotal}`);
-        console.log(`Tax Amount: $${newTaxAmount}`);
-        console.log(`Discount Amount: $${newDiscountAmount}`);
-        console.log(`Total: $${newTotal}`);
 
 
     }, [state.items, state.taxRate, state.discountRate]);
