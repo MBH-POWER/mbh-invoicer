@@ -91,17 +91,22 @@ export default function Home() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-start p-24 py-4 gap-5">
-            <div className="z-10 w-full items-center justify-between font-mono text-sm lg:flex">
-                <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 text-gray-900 font-bold pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800  dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border bg-gray-200-900 lg:p-4 ">
+        <main className="flex min-h-screen flex-col items-center justify-start p-20 py-4 gap-5 bg-green-50">
+            <div className="z-10 w-full items-center justify-between font-mono text-sm lg:flex ">
+                {/* <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 text-gray-900 font-bold pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800  dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border bg-gray-200-900 lg:p-4">
                     {user.email}
+                </p> */}
+                <p className="fixed left-0 top-0 flex w-full justify-center border-b border-green-500 text-gray-900 font-bold pb-6 pt-8 backdrop-blur-2xl dark:border-green-700 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border  lg:p-4">
+                {user.email}
                 </p>
+
                 <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
                     <a
                         className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0 no-underline"
                         href="/create"
                     >
-                        <Button className="bg-zinc-900 hover:bg-zinc-800 font-semibold">Create Invoice</Button>
+                    <Button className="bg-green-600 hover:bg-green-700 font-semibold">Create Invoice</Button>
+                
                     </a>
                 </div>
             </div>

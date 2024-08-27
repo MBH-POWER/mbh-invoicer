@@ -13,6 +13,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import Image from '../public/logo.png'
+import Image from 'next/image'
 
 const Header = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -64,37 +66,48 @@ const Header = () => {
     }
 
     return (
-        <header className="bg-zinc-800 p-4 py-6 shadow-sm">
-            <div className=" w-[99%] lg:w-[91%] mx-auto flex justify-between items-center">
-                <Link href="/" className="text-xl -tracking-wider font-extrabold text-gray-200 no-underline">
-                    MBH Invoicer
-                </Link>
-                <div className="flex items-center space-x-4">
-                    {user && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                                    <Avatar>
-                                        <AvatarImage src={getAvatarSrc()} alt={user.displayName || 'User'} />
-                                        <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
-                                    </Avatar>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={handleCreate} >
-                                    Create Invoice
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={handleLogout}>
-                                    Log out
-                                </DropdownMenuItem>
-
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
-                </div>
+        <header className="bg-green-700 p-4 py-6 shadow-sm">
+          <div className="w-[99%] lg:w-[91%] mx-auto flex justify-between items-center">
+            <div className="flex align items-center">
+            <Image className="relative h-8 w-8 rounded  mr-1"
+                src="/logo.png"
+                alt="MBH Invoicer Logo"
+                width={40}
+                height={40}/>
+                <Link href="/" className="text-xl -tracking-wider font-extrabold text-green-50 no-underline">
+              MBH Invoicer
+            </Link>
             </div>
+                
+            
+            
+            <div className="flex items-center space-x-4">
+              {user && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar>
+                        <AvatarImage
+                          src={getAvatarSrc()}
+                          alt={user.displayName || 'User'}
+                        />
+                        <AvatarFallback>{getAvatarFallback()}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="bg-green-50 dark:bg-green-800">
+                    <DropdownMenuItem onClick={handleCreate} className="text-green-700 hover:bg-green-100 dark:text-green-200 dark:hover:bg-green-600">
+                      Create Invoice
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="text-green-700 hover:bg-green-100 dark:text-green-200 dark:hover:bg-green-600">
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+          </div>
         </header>
-    );
-};
-
-export default Header;
+      );
+    }
+    export default Header;      

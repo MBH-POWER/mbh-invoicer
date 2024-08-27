@@ -114,7 +114,7 @@ export default function InvoicePage({ params }: Props) {
                             <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Code</th>
+                                    {/* <th>Code</th> */}
                                     <th>Quantity</th>
                                     <th>Price</th>
                                     <th>Amount</th>
@@ -124,7 +124,7 @@ export default function InvoicePage({ params }: Props) {
                                 {invoice.items.map((item, index) => (
                                     <tr key={index}>
                                         <td>{item.name}</td>
-                                        <td>{item.code}</td>
+                                        {/* <td>{item.code}</td> */}
                                         <td>{item.quantity}</td>
                                         <td>{invoice.currency}{item.price}</td>
                                         <td>{invoice.currency}{(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
@@ -193,9 +193,9 @@ export default function InvoicePage({ params }: Props) {
                     </Card>
 
             <div className="mt-4 mb-4 flex items-center justify-center gap-2">
-                <button
+                {/* <button
                     className=" text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm disabled:bg-zinc-500 " disabled
-                > Edit </button>
+                > Edit </button> */}
                 <button className="text-white font-bold bg-zinc-800 py-3 d-block w-100 rounded-sm" onClick={generateInvoice}>
                     Download Invoice PDF
                     </button>
