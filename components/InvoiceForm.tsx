@@ -39,6 +39,10 @@ const InvoiceForm: React.FC = () => {
         discountRate: 0,
         discountAmount: "0.00",
         paymentPlan: "100% Payment Received",
+        transportation:"0.00",
+        installation: "0.00",
+        taxOnTransportation: false,
+        taxOnInstallation: false,
         items: [
             {
                 id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
@@ -78,18 +82,34 @@ const InvoiceForm: React.FC = () => {
 
     const handleCalculateTotal = useCallback(() => {
 
-        const { items, taxRate, discountRate, } = state;
+        const { items, taxRate, discountRate, transportation, installation, taxOnTransportation, taxOnInstallation } = state;
         const newSubTotal = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
             .toFixed(2);
-        const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
-        const newTaxAmount = ((parseFloat(newSubTotal) - parseFloat(newDiscountAmount)) * taxRate / 100).toFixed(2)
-        
 
+        // const transportationCost = parseFloat(transportation);
+        // const installationCost = parseFloat(installation);
+
+        // const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
+        // const newTaxAmount = ((parseFloat(newSubTotal) - parseFloat(newDiscountAmount)) * taxRate / 100).toFixed(2)
+        
+        const transportationCost = parseFloat(transportation);
+        const installationCost = parseFloat(installation);
+        
+        const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
+        
+        let taxableAmount = parseFloat(newSubTotal) - parseFloat(newDiscountAmount);
+        if (taxOnTransportation) taxableAmount += transportationCost;
+        if (taxOnInstallation) taxableAmount += installationCost;
+        
+        const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(2);
+        
 
         const newTotal = (
             parseFloat(newSubTotal) - 
             parseFloat(newDiscountAmount) +
-            parseFloat(newTaxAmount)
+            parseFloat(newTaxAmount) +
+            transportationCost +
+            installationCost
         ).toFixed(2);
 
         setState((prevState) => ({
@@ -101,7 +121,7 @@ const InvoiceForm: React.FC = () => {
         }));
 
 
-    }, [state.items, state.taxRate, state.discountRate]);
+    }, [state.items, state.taxRate, state.discountRate, state.transportation, state.installation, state.taxOnTransportation, state.taxOnInstallation]);
         
 
  
@@ -346,6 +366,53 @@ const InvoiceForm: React.FC = () => {
                                         {state.taxAmount || 0}
                                     </span>
                                 </div>
+
+                                <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+                        <span className="fw-bold">Transportation:</span>
+                        <div>
+                            <InputGroup className="mb-1">
+                                <InputGroup.Text>{state.currency}</InputGroup.Text>
+                                <Form.Control
+                                    type="number"
+                                    value={state.transportation}
+                                    onChange={handleChange("transportation")}
+                                    min="0"
+                                    step="0.01"
+                                />
+                            </InputGroup>
+                            <Form.Check 
+                                type="checkbox" 
+                                label="Apply tax" 
+                                checked={state.taxOnTransportation}
+                                onChange={(e) => setState(prev => ({ ...prev, taxOnTransportation: e.target.checked }))}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+                        <span className="fw-bold">Installation:</span>
+                        <div>
+                            <InputGroup className="mb-1">
+                                <InputGroup.Text>{state.currency}</InputGroup.Text>
+                                <Form.Control
+                                    type="number"
+                                    value={state.installation}
+                                    onChange={handleChange("installation")}
+                                    min="0"
+                                    step="0.01"
+                                />
+                            </InputGroup>
+                            <Form.Check 
+                                type="checkbox" 
+                                label="Apply tax" 
+                                checked={state.taxOnInstallation}
+                                onChange={(e) => setState(prev => ({ ...prev, taxOnInstallation: e.target.checked }))}
+                            />
+                        </div>
+                    </div>
+
+
+
                                 <hr />
                                 <div
                                     className="d-flex flex-row align-items-start justify-content-between"

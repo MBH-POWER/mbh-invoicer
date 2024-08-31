@@ -92,6 +92,14 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                                 <span className="fw-bold">Subtotal:</span>
                                 <span>{invoice.currency}{invoice.subTotal}</span>
                             </div>
+                            <div className="d-flex flex-row align-items-start justify-content-between">
+                                <span className="fw-bold">Transportation:</span>
+                                <span>{invoice.currency}{invoice.transportation}</span>
+                            </div>
+                            <div className="d-flex flex-row align-items-start justify-content-between">
+                                <span className="fw-bold">Installation:</span>
+                                <span>{invoice.currency}{invoice.installation}</span>
+                            </div>
                             <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                                 <span className="fw-bold">Discount:</span>
                                 <span>
