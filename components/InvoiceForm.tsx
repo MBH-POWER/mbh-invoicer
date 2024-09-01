@@ -213,6 +213,8 @@ const InvoiceForm: React.FC = () => {
             discountAmount: state.discountAmount,
             taxAmount: state.taxAmount,
             createdAt: new Date(),
+            transportation: state.transportation,
+            installation: state.installation
         };
         setInvoce(invoice)
         setIsOpen(true);

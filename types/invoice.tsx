@@ -35,6 +35,8 @@ export interface Invoice {
     discountRate: string;
     discountAmount: string;
     total: string;
-    createdAt: any
+    createdAt: any;
+    transportation: any;
+    installation: any;
 }
 

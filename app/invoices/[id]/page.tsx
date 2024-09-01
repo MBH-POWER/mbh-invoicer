@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { amountToWords, generateInvoiceNumber } from '@/lib/utils'
 //import { Card } from '@/components/ui/card'
 import DeliveryNote from '@/components/DeliveryNote'
+import 'jspdf-autotable'
 
 
 // //state to control which view is currently active
@@ -138,13 +139,29 @@ export default function InvoicePage({ params }: Props) {
                                     <span className="fw-bold">Subtotal:</span>
                                     <span>{invoice.currency}{invoice.subTotal}</span>
                                 </div>
-                                <div className="d-flex flex-row align-items-start justify-content-between mt-2">
-                                    <span className="fw-bold">Discount:</span>
-                                    <span>
-                                        <span className="small">({invoice.discountRate}%)</span>
-                                        {invoice.currency}{invoice.discountAmount}
-                                    </span>
-                                </div>
+                                {Number(invoice.transportation) !== 0 && (
+    <div className="d-flex flex-row align-items-start justify-content-between">
+        <span className="fw-bold">Transportation:</span>
+        <span>{invoice.currency}{invoice.transportation}</span>
+    </div>
+)}
+
+{Number(invoice.installation) !== 0 && (
+    <div className="d-flex flex-row align-items-start justify-content-between">
+        <span className="fw-bold">Installation:</span>
+        <span>{invoice.currency}{invoice.installation}</span>
+    </div>
+)}
+
+{Number(invoice.discountAmount) !== 0 && (
+    <div className="d-flex flex-row align-items-start justify-content-between mt-2">
+        <span className="fw-bold">Discount:</span>
+        <span>
+            <span className="small">({invoice.discountRate}%)</span>
+            {invoice.currency}{invoice.discountAmount}
+        </span>
+    </div>
+)}
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                                     <span className="fw-bold">Tax:</span>
                                     <span>
@@ -174,7 +191,7 @@ export default function InvoicePage({ params }: Props) {
                         <hr />
 
                         <div>
-                            <h6>Payment Details - Pls Use MBH POWER LIMITED</h6>
+                            <h6>Payment Details - MBH POWER LIMITED</h6>
                             <h6 className='fw-bold'>TIN - 00277867-0001</h6>
                             <h6 className="fw-bold">VAT Reg No - IKV06002380240</h6>
                             <h6 className="fw-bold">Bank Details- United Bank for Africa (UBA) - 1016337483</h6>
