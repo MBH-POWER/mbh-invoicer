@@ -48,7 +48,7 @@ const InvoiceForm: React.FC = () => {
                 id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
                 name: "",
                 code: "",
-                price: "1.00",
+                price: "0.00",
                 quantity: 1,
             },
         ] as InvoiceItem[],
@@ -142,7 +142,7 @@ const InvoiceForm: React.FC = () => {
         const newItem: InvoiceItem = {
             id,
             name: "",
-            price: "1.00",
+            price: "0.00",
             code: "",
             quantity: 1,
         };
