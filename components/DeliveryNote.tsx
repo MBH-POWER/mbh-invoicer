@@ -118,10 +118,10 @@ export default function DeliveryNote({ invoiceId }: Props) {
                 
                 <div className="row justify-content-around mt-5 ft-5">
                     <div className="col-4">
-                        <h6 className="fw-bold fs-5">Delivered By: <br/><br/><br/><br/> Signature</h6>
+                        <h6 className="fw-bold fs-5">For: MBH Power Limited<br/><br/><br/><br/> Authorized Signatory</h6>
                     </div>
                     <div className="col-4">
-                        <h6 className="fw-bold fs-5">Received By: <br/><br/><br/><br/><br/> Signature</h6>
+                        <h6 className="fw-bold fs-5">For: Customer (Received)<br/><br/><br/><br/><br/> Authorized Signatory</h6>
                     </div>
                 </div>
             </Card>

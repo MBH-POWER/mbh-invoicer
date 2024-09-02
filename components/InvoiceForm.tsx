@@ -15,6 +15,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { amountToWords } from "@/lib/utils";
 import InvoiceItemComponent from "./InvoiceItem";
+import DeliveryItemComponent from "./DeliveryItem";
 
 const InvoiceForm: React.FC = () => {
     const { user, setUser } = useAuth();
@@ -337,6 +338,13 @@ const InvoiceForm: React.FC = () => {
                             </Col>
                         </Row>
                         <InvoiceItemComponent
+                            onItemizedItemEdit={onItemizedItemEdit}
+                            onRowAdd={handleAddEvent}
+                            onRowDel={handleRowDel}
+                            currency={state.currency}
+                            items={state.items}
+                        />
+                        <DeliveryItemComponent
                             onItemizedItemEdit={onItemizedItemEdit}
                             onRowAdd={handleAddEvent}
                             onRowDel={handleRowDel}

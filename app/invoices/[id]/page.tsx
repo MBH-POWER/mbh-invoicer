@@ -115,8 +115,8 @@ export default function InvoicePage({ params }: Props) {
                                     <th>Item</th>
                                     {/* <th>Code</th> */}
                                     <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
+                                    <th>Unit Price({invoice.currency})</th>
+                                    <th>Amount ({invoice.currency})</th>
                                 </tr>
                             </thead>
                             <tbody>

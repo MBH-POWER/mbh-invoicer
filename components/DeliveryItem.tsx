@@ -5,10 +5,11 @@ import Button from "react-bootstrap/Button";
 import { BiTrash } from "react-icons/bi";
 import EditableField from "./EditableField";
 import { InvoiceItem as InvoiceItemInterfacce } from "@/types/invoice";
+import { DeliveryItem as DeliveryItemInterface } from "@/types/invoice";
 
-type Item = InvoiceItemInterfacce
+type Item = DeliveryItemInterface
 
-interface InvoiceItemProps {
+interface DeliveryItemProps {
     items: Item[];
     onItemizedItemEdit: (event: React.ChangeEvent<HTMLInputElement>) => void;
     currency: string;
@@ -16,16 +17,16 @@ interface InvoiceItemProps {
     onRowAdd: () => void;
 }
 
-const InvoiceItemComponent: React.FC<InvoiceItemProps> = ({ items, onItemizedItemEdit, currency, onRowDel, onRowAdd }) => {
+const DeliveryItemComponent: React.FC<DeliveryItemProps> = ({ items, onItemizedItemEdit, currency, onRowDel, onRowAdd }) => {
     return (
         <div>
-            <p className="fw-bold">Create Invoice</p>
+            <hr />
+            <p className="fw-bold">Create Delivery Note</p>
             <Table>
                 <thead>
                     <tr>
                         <th>ITEM</th>
                         <th>QTY</th>
-                        <th>PRICE/RATE</th>
                         <th className="text-center">ACTION</th>
                     </tr>
                 </thead>
@@ -73,7 +74,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                         id: item.id,
                     }}
                 />
-                {/* <EditableField
+                <EditableField
                     onItemizedItemEdit={onItemizedItemEdit}
                     cellData={{
                         type: "text",
@@ -82,7 +83,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                         value: item.code,
                         id: item.id,
                     }}
-                /> */}
+                />
             </td>
             <td style={{ minWidth: "70px" }}>
                 <EditableField
@@ -97,7 +98,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                     }}
                 />
             </td>
-            <td style={{ minWidth: "130px" }}>
+            {/* <td style={{ minWidth: "130px" }}>
                 <EditableField
                     onItemizedItemEdit={onItemizedItemEdit}
                     cellData={{
@@ -112,7 +113,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                         id: item.id,
                     }}
                 />
-            </td>
+            </td> */}
             <td className="text-center" style={{ minWidth: "50px" }}>
                 <BiTrash
                     onClick={handleDelete}
@@ -124,5 +125,5 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
     );
 };
 
-export default InvoiceItemComponent;
+export default DeliveryItemComponent;
 
