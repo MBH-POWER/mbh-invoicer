@@ -77,11 +77,9 @@ export default function InvoicePage({ params }: Props) {
             </div>
 
             {activeView === 'invoice' ? (
-                <>
-                    <br />
-                    <br />
+                <>  
                     <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4 rounded-xl">
-                    <label className='fw-bold d-flex flex-row align-items-center justify-content-center'>INVOICE</label><br />
+                    <h2 className='fw-bold d-flex flex-row align-items-center justify-content-center'>INVOICE</h2>
                         <div className="d-flex flex-row align-items-start justify-content-between mb-3">
                             <div className="d-flex flex-column">
                                 <div className="d-flex flex-column">
@@ -91,12 +89,12 @@ export default function InvoicePage({ params }: Props) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="mb-2">
+                            <div className="mb-1">
                                 <span className="fw-bold">Invoice Number:&nbsp;</span>
                                 <span>{generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))}</span>
                             </div>
                         </div>
-                        <hr className="my-4" />
+                        <hr className="my-3" />
                         <Row className="mb-5">
                             <Col>
                                 <h6 className="fw-bold fs-5">Bill from:</h6>
@@ -179,8 +177,8 @@ export default function InvoicePage({ params }: Props) {
                         <div className='py-3 px-1 w-full my-2 flex justify-end items-center bg-gray-200'>
                             <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
                         </div>
-                        <hr />
-                        <h6 className="fw-bold fs-5">Payment Terms:</h6>
+                        {/* <hr /> */}
+                        <h6 className="fw-bold fs-5 mt-2">Payment Terms:</h6>
                         <p>{invoice.paymentPlan}</p>
                         
                         {/* commented this out so notes part of the create invoice won't be printed out in the

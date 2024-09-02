@@ -454,7 +454,7 @@ const InvoiceForm: React.FC = () => {
                             className="my-2"
                             rows={1}
                         />
-                        <br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <br /><br /><br /><br /><br /><br /><br />
 
                         <div className="row justify-content-around">
                             <div className="col-4">
@@ -540,13 +540,24 @@ const InvoiceForm: React.FC = () => {
                             </InputGroup>
                         </Form.Group>
                         <hr className="mt-4 mb-3" />
-                        <Button
-                            variant="primary"
+                        {/* <Button
+                            // variant="primary"
                             type="submit"
                             className="d-block w-100 btn-secondary"
+                            // className="bg-green-600 hover:bg-green-700 font-semibold"
                         >
                             Review Invoice
-                        </Button>
+                        </Button> */}
+                        <Button
+    type="submit"
+    className="d-block w-100"
+    style={{ backgroundColor: '#4caf50', color: '#fff',
+        border: 'none'
+     }}
+>
+    Review Invoice
+</Button>
+
                     </div>
                 </Col>
             </Row>

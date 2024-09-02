@@ -55,13 +55,9 @@ export default function DeliveryNote({ invoiceId }: Props) {
     return (
         <div className="container mt-5 p-4 fs-5">
             <Card id="deliveryNoteCapture" className="p-4 p-xl-5 my-3 my-xl-4 rounded-xl">
-            <label className='fw-bold d-flex flex-row align-items-center justify-content-center'>DELIVERY NOTE</label>
+            <h2 className='fw-bold d-flex flex-row align-items-center justify-content-center'>DELIVERY NOTE</h2>
             <br />
                 <div className="d-flex flex-row align-items-start justify-content-between mb-3">
-                    <div className="mb-2">
-                            <span className="fw-bold">Delivery No:&nbsp;</span>
-                            <span>{generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))}</span>
-                    </div>
                     <div className="d-flex flex-column">
                         <div className="d-flex flex-column">
                             <div className="mb-2">
@@ -70,8 +66,12 @@ export default function DeliveryNote({ invoiceId }: Props) {
                             </div>
                         </div>
                     </div>
+                    <div className="mb-2">
+                            <span className="fw-bold">Delivery No:&nbsp;</span>
+                            <span>{generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))}</span>
+                    </div>
                 </div>
-                <hr className="my-4" />
+                <hr className="my-3" />
                 <Row className="mb-5">
                     <Col>
                         <h6 className="fw-bold fs-5">From:</h6>
@@ -108,9 +108,9 @@ export default function DeliveryNote({ invoiceId }: Props) {
                     <p>{invoice.notes}</p> */}
                     {invoice.notes && (
                         <>
-                        <hr className="mt-0 mb-3" />
-                        <h6 className="fw-bold">Info:</h6>
-                        <p>{invoice.notes}</p>
+                        {/* <hr className="mt-0 mb-3" /> */}
+                        {/* <h6 className="fw-bold">Info:</h6> */}
+                        <p className='fw-bold'>{invoice.notes}</p>
                         </>
                     )}
 
