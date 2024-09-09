@@ -22,7 +22,7 @@ interface Props {
 
 export default function InvoicePage({ params }: Props) {
     const [invoice, setInvoice] = useState<Invoice | null>(null)
-    const [delivery, setDelivery] = useState<DeliveryItem | null>(null)
+    // const [delivery, setDelivery] = useState<DeliveryItem | null>(null)
     const [activeView, setActiveView] = useState<'invoice' | 'deliveryNote'>('invoice')
 
     useEffect(() => {

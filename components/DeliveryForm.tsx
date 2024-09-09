@@ -13,8 +13,8 @@ const DeliveryForm = () => {
 
   return (
     <div>
-      <hr />
-      <h5 className='mt-4'>Delivery Form</h5>
+      <hr/>
+      <h5 className='fw-bold'>Delivery Form</h5>
       {delivery.map((item, index) => (
         <Row className="mt-4" key={index}>
           <Col md={4}>

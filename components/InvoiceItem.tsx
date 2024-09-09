@@ -19,7 +19,7 @@ interface InvoiceItemProps {
 const InvoiceItemComponent: React.FC<InvoiceItemProps> = ({ items, onItemizedItemEdit, currency, onRowDel, onRowAdd }) => {
     return (
         <div>
-            <p className="fw-bold">Create Invoice</p>
+            <h5 className="fw-bold">Create Invoice</h5>
             <Table>
                 <thead>
                     <tr>
