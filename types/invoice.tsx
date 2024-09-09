@@ -9,7 +9,6 @@ export interface InvoiceItem {
     quantity: number;
 }
 
-
 export interface Invoice {
     assignee: Partial<User>
     invoiceNumber: number;
@@ -38,6 +37,7 @@ export interface Invoice {
     createdAt: any;
     transportation: any;
     installation: any;
+    // deliveryItems: DeliveryItem[];
 }
 
 

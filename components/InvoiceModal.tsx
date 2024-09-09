@@ -2,9 +2,17 @@
 import React from "react";
 import { Modal, Card, Row, Col, Table, Button } from "react-bootstrap";
 import { useRouter } from 'next/navigation';
-import { Invoice } from "@/types/invoice";
+import { Invoice, Delivery, DeliveryItem } from "@/types/invoice";
 import { createInvoice } from "@/actions/invoices";
 import { amountToWords } from "@/lib/utils";
+import DisplayData from "./DisplayData";
+import InvoiceForm from "./InvoiceForm";
+import DeliveryForm from "./DeliveryForm";
+import { useDeliveryStore } from "./DeliveryStore";
+
+
+
+
 
 interface InvoiceModalProps {
     showModal: boolean;
@@ -15,9 +23,10 @@ interface InvoiceModalProps {
 const InvoiceModal: React.FC<InvoiceModalProps> = ({
     showModal,
     closeModal,
-    invoice
+    invoice,
 }) => {
     const router = useRouter();
+    const { delivery } = useDeliveryStore();
 
     if (!invoice) {
         return null
@@ -33,8 +42,11 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
         }
     };
 
+
     return (
+        
         <Modal show={showModal} onHide={closeModal} size="lg" centered>
+            {/* <DisplayData /> */}
             <Modal.Body>
                 <Card id="invoiceCapture" className="p-4 my-3 ">
                     <div className="d-flex flex-row align-items-start justify-content-between mb-3">
@@ -86,6 +98,29 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                             ))}
                         </tbody>
                     </Table>
+
+                     {/* Add Delivery Data Section */}
+                     <hr className="my-4" />
+                    <h6 className="fw-bold">Delivery Items:</h6>
+                    <Table striped bordered>
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Code</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {delivery.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.itemName}</td>
+                                    <td>{item.itemCode}</td>
+                                    <td>{item.quantity}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+
                     <Row className="mt-4 justify-content-end">
                         <Col lg={6}>
                             <div className="d-flex flex-row align-items-start justify-content-between">
@@ -151,7 +186,10 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                             <h6 className="fw-bold">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
                             </div>
                     </div>
+                    {/* <DisplayData data={} /> */}
                 </Card>
+                 {/* <DisplayData data={}/> */}
+                 
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={closeModal}>
@@ -162,6 +200,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                 </Button>
             </Modal.Footer>
         </Modal>
+        
     );
 };
 

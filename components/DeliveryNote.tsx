@@ -6,6 +6,9 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { generateInvoiceNumber } from '@/lib/utils'
+import DisplayData from './DisplayData';
+import { useDeliveryStore } from './DeliveryStore';
+
 
 
 interface Props {
@@ -15,15 +18,17 @@ interface Props {
 
 export default function DeliveryNote({ invoiceId }: Props) {
     const [invoice, setInvoice] = useState<Invoice | null>(null)
-
+    const { delivery } = useDeliveryStore();
+    
     useEffect(() => {
         const fetchInvoice = async () => {
             const inv = await getInvoiceById(invoiceId)
             if (inv) {
-                setInvoice(inv)
-            }
+                setInvoice(inv);
         }
-        fetchInvoice()
+    };
+
+        fetchInvoice();
     }, [invoiceId])
 
     const generateDeliveryNote = () => {
@@ -84,6 +89,7 @@ export default function DeliveryNote({ invoiceId }: Props) {
                         <div>{invoice.billTo.address}</div>
                     </Col>
                 </Row>
+                
                 <Table striped bordered>
                     <thead>
                         <tr>
@@ -93,14 +99,14 @@ export default function DeliveryNote({ invoiceId }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {invoice.items.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.name}</td>
-                                <td>{item.code}</td>
-                                <td>{item.quantity}</td>
-                            </tr>
-                        ))}
-                    </tbody>
+                            {delivery.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.itemName}</td>
+                                    <td>{item.itemCode}</td>
+                                    <td>{item.quantity}</td>
+                                </tr>
+                            ))}
+                        </tbody>
                 </Table>
                 <br /><br />
                 {/* <hr className="mt-0 mb-3" />

@@ -8,19 +8,22 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import InvoiceModal from "@/components/InvoiceModal";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Invoice, InvoiceItem } from "@/types/invoice";
+import { DeliveryItem, Invoice, InvoiceItem } from "@/types/invoice";
 import { useAuth } from "@/store/authStore";
 import { getLastInvoice } from "@/actions/invoices";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { amountToWords } from "@/lib/utils";
 import InvoiceItemComponent from "./InvoiceItem";
-import DeliveryItemComponent from "./DeliveryItem";
+import DisplayData from "./DisplayData";
+import DeliveryNote from "./DeliveryNote";
+import DeliveryForm from "./DeliveryForm";
 
 const InvoiceForm: React.FC = () => {
     const { user, setUser } = useAuth();
     const [invoice, setInvoce] = useState<Invoice>()
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [delivery, setDelivery] = useState();
     const [state, setState] = useState({
         currency: "₦",
         currentDate: new Date().toLocaleDateString(),
@@ -54,6 +57,9 @@ const InvoiceForm: React.FC = () => {
             },
         ] as InvoiceItem[],
     });
+
+
+
 
     useEffect(() => {
         const setNewInvoiceId = async () => {
@@ -183,9 +189,15 @@ const InvoiceForm: React.FC = () => {
         );
     }
 
+    // const handleDeliveryChange = (newDelivery: DeliveryItem[]) => {
+    //     setDelivery(newDelivery);
+    // };
+
     const openModal = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleCalculateTotal();
+        
+        
         const invoice: Invoice = {
             items: state.items,
             assignee: {
@@ -215,7 +227,8 @@ const InvoiceForm: React.FC = () => {
             taxAmount: state.taxAmount,
             createdAt: new Date(),
             transportation: state.transportation,
-            installation: state.installation
+            installation: state.installation,
+            // deliveryItems: delivery,
         };
         setInvoce(invoice)
         setIsOpen(true);
@@ -227,6 +240,7 @@ const InvoiceForm: React.FC = () => {
     };
 
     return (
+        
         <Form onSubmit={openModal} className="text-sm">
             {/* <div className='fw-bold d-flex flex-row align-items-center justify-content-center'>INVOICE</div> */}
             <Row>
@@ -344,13 +358,7 @@ const InvoiceForm: React.FC = () => {
                             currency={state.currency}
                             items={state.items}
                         />
-                        <DeliveryItemComponent
-                            onItemizedItemEdit={onItemizedItemEdit}
-                            onRowAdd={handleAddEvent}
-                            onRowDel={handleRowDel}
-                            currency={state.currency}
-                            items={state.items}
-                        />
+                        <DeliveryForm />
                         <Row className="mt-4 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">
@@ -480,6 +488,10 @@ const InvoiceForm: React.FC = () => {
                             showModal={isOpen}
                             closeModal={closeModal}
                             invoice={invoice ? invoice : null}
+                            // delivery={delivery}
+                            
+                            
+                            
                         />                        <Form.Group className="mb-3">
                             <Form.Label className="fw-bold">Currency:</Form.Label>
                             <Form.Select
@@ -569,7 +581,14 @@ const InvoiceForm: React.FC = () => {
                     </div>
                 </Col>
             </Row>
+
+          
+
+            <hr className="my-4" />
+            {/* <DisplayData data={delivery} />
+            <NewDataDisplay data={delivery}/> */}    
         </Form>
+        
     );
 };
 

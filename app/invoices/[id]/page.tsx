@@ -2,7 +2,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { getInvoiceById } from '@/actions/invoices'
-import { Invoice } from '@/types/invoice'
+import { DeliveryItem, Invoice } from '@/types/invoice'
 import { Card, Row, Col, Table } from 'react-bootstrap'
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -22,6 +22,7 @@ interface Props {
 
 export default function InvoicePage({ params }: Props) {
     const [invoice, setInvoice] = useState<Invoice | null>(null)
+    const [delivery, setDelivery] = useState<DeliveryItem | null>(null)
     const [activeView, setActiveView] = useState<'invoice' | 'deliveryNote'>('invoice')
 
     useEffect(() => {
