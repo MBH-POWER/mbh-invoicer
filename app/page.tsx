@@ -150,8 +150,8 @@ export default function Home() {
                             <TableHead className="w-[100px]">Invoice No</TableHead>
                             <TableHead>Date of Issue</TableHead>
                             <TableHead className="hidden">Assignee</TableHead>
-                            <TableHead>Bill From</TableHead>
                             <TableHead>Bill To</TableHead>
+                            <TableHead>Delivered To</TableHead>
                             <TableHead>Items</TableHead>
                             <TableHead>Subtotal</TableHead>
                             <TableHead>Tax Rate</TableHead>
@@ -183,7 +183,7 @@ export default function Home() {
                     </TableBody>
                 </Table>
             </div>
-            <Pagination className="no-underline">
+            {/* <Pagination className="no-underline">
                 <PaginationContent>
                     <PaginationItem className="cursor-pointer">
                         {currentPage > 1 && (
@@ -206,8 +206,8 @@ export default function Home() {
                         )}
                     </PaginationItem>
                 </PaginationContent>
-            </Pagination>
-            {/* <Pagination className="no-underline">
+            </Pagination> */}
+            <Pagination className="no-underline">
                 <PaginationContent>
                     <PaginationItem className="cursor-pointer">
                         {
@@ -236,7 +236,7 @@ export default function Home() {
                         }
                     </PaginationItem>
                 </PaginationContent>
-            </Pagination> */}
+            </Pagination>
         </main>
     );
 }

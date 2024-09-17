@@ -283,9 +283,9 @@ const InvoiceForm: React.FC = () => {
                         <hr className="my-4" />
                         <Row className="mb-5">
                             <Col>
-                                <Form.Label className="fw-bold">Bill from:</Form.Label>
+                                <Form.Label className="fw-bold">Bill to:</Form.Label>
                                 <Form.Control
-                                    placeholder="Who is this invoice from?"
+                                    placeholder="Who is this invoice to?"
                                     //rows={3}
                                     value={state.billFrom}
                                     type="text"
@@ -296,7 +296,7 @@ const InvoiceForm: React.FC = () => {
                                     required
                                 />
                                 <Form.Control
-                                    placeholder="Email address"
+                                    placeholder="Email address / One Time Customer"
                                     value={state.billFromEmail}
                                     type="email"
                                     name="billFromEmail"
@@ -313,11 +313,11 @@ const InvoiceForm: React.FC = () => {
                                     className="my-2"
                                     autoComplete="address"
                                     onChange={handleChange("billFromAddress")}
-                                    required
+                                    // required
                                 />
                             </Col>
                             <Col>
-                                <Form.Label className="fw-bold">Bill to:</Form.Label>
+                                <Form.Label className="fw-bold">Delivered to:</Form.Label>
                                 <Form.Control
                                     placeholder="Who is this invoice to?"
                                     //rows={3}
@@ -330,7 +330,7 @@ const InvoiceForm: React.FC = () => {
                                     required
                                 />
                                 <Form.Control
-                                    placeholder="Email address"
+                                    placeholder="Email address / One Time Customer"
                                     value={state.billToEmail}
                                     type="email"
                                     name="billToEmail"
@@ -347,7 +347,7 @@ const InvoiceForm: React.FC = () => {
                                     className="my-2"
                                     autoComplete="address"
                                     onChange={handleChange("billToAddress")}
-                                    required
+                                    // required
                                 />
                             </Col>
                         </Row>

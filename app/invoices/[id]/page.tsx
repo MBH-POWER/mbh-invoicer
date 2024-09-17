@@ -98,13 +98,13 @@ export default function InvoicePage({ params }: Props) {
                         <hr className="my-3" />
                         <Row className="mb-5">
                             <Col>
-                                <h6 className="fw-bold fs-5">Bill from:</h6>
+                                <h6 className="fw-bold fs-5">Bill to:</h6>
                                 <div>{invoice.billFrom.name}</div>
                                 <div>{invoice.billFrom.email || ''}</div>
                                 <div>{invoice.billFrom.address}</div>
                             </Col>
                             <Col>
-                                <h6 className="fw-bold fs-5">Bill to:</h6>
+                                <h6 className="fw-bold fs-5">Delivered to:</h6>
                                 <div>{invoice.billTo.name}</div>
                                 <div>{invoice.billTo.email}</div>
                                 <div>{invoice.billTo.address}</div>

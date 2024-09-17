@@ -64,13 +64,13 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                     <hr className="my-4" />
                     <Row className="mb-5">
                         <Col>
-                            <h6 className="fw-bold">Bill from:</h6>
+                            <h6 className="fw-bold">Sold to:</h6>
                             <div>{invoice.billFrom.name}</div>
                             <div>{invoice.billFrom.email}</div>
                             <div>{invoice.billFrom.address}</div>
                         </Col>
                         <Col>
-                            <h6 className="fw-bold">Bill to:</h6>
+                            <h6 className="fw-bold">Delivered to:</h6>
                             <div>{invoice.billTo.name}</div>
                             <div>{invoice.billTo.email}</div>
                             <div>{invoice.billTo.address}</div>
