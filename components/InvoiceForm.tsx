@@ -112,6 +112,8 @@ const InvoiceForm: React.FC = () => {
         
         // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(2);
         // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(3);
+        
+        
         const newTaxAmount = Math.floor((taxableAmount * taxRate / 100) * 100) / 100;
         
         
@@ -126,6 +128,7 @@ const InvoiceForm: React.FC = () => {
             let total = (
                 parseFloat(newSubTotal) - 
                 parseFloat(newDiscountAmount) +
+                //@ts-ignore
                 parseFloat(newTaxAmount) +
                 transportationCost +
                 installationCost
@@ -141,8 +144,9 @@ const InvoiceForm: React.FC = () => {
         
         // .toFixed(2)
         
-
+        //@ts-ignore
         setState((prevState) => ({
+            //@ts-ignore
             ...prevState,
             subTotal: newSubTotal,
             taxAmount: newTaxAmount,
