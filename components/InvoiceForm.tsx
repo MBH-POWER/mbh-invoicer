@@ -108,16 +108,39 @@ const InvoiceForm: React.FC = () => {
         if (taxOnTransportation) taxableAmount += transportationCost;
         if (taxOnInstallation) taxableAmount += installationCost;
         
-        const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(2);
+        // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(3);
         
-
-        const newTotal = (
-            parseFloat(newSubTotal) - 
-            parseFloat(newDiscountAmount) +
-            parseFloat(newTaxAmount) +
-            transportationCost +
-            installationCost
-        ).toFixed(2);
+        // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(2);
+        // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(3);
+        const newTaxAmount = Math.floor((taxableAmount * taxRate / 100) * 100) / 100;
+        
+        
+        // const newTotal = (
+        //     parseFloat(newSubTotal) - 
+        //     parseFloat(newDiscountAmount) +
+        //     parseFloat(newTaxAmount) +
+        //     transportationCost +
+        //     installationCost
+        // ).toFixed(2);
+        const newTotal = (function() {
+            let total = (
+                parseFloat(newSubTotal) - 
+                parseFloat(newDiscountAmount) +
+                parseFloat(newTaxAmount) +
+                transportationCost +
+                installationCost
+            ).toFixed(2);
+        
+            // If the total ends with .01, change it to .00
+            if (total.endsWith('.01')) {
+                return (parseFloat(total) - 0.01).toFixed(2);
+            }
+        
+            return total;
+        })();
+        
+        // .toFixed(2)
+        
 
         setState((prevState) => ({
             ...prevState,
