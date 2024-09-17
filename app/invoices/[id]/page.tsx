@@ -61,7 +61,7 @@ export default function InvoicePage({ params }: Props) {
     }
 
     return (
-        <div className="container mt-4 p-4 fs-5">
+        <div className="container mt-3 p-3 fs-6">
             <div className="mb-4 flex items-center justify-center gap-2">
                 <button
                     className={`font-bold py-2 px-4 rounded ${activeView === 'invoice' ? 'bg-zinc-800 text-white' : 'bg-gray-200 text-black'}`}
@@ -91,7 +91,7 @@ export default function InvoicePage({ params }: Props) {
                                 </div>
                             </div>
                             <div className="mb-2">
-                                <span className="fw-bold">Invoice Number:&nbsp;</span>
+                                <span className="fw-bold">Invoice No:&nbsp;</span>
                                 <span>{generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))}</span>
                             </div>
                         </div>
@@ -175,7 +175,7 @@ export default function InvoicePage({ params }: Props) {
                                 </div>
                             </Col>
                         </Row>
-                        <div className='py-3 px-1 w-full my-2 flex justify-end items-center bg-gray-200'>
+                        <div className='py-3 px-1 w-full my-1 flex justify-end items-center bg-gray-200'>
                             <p className="font-semibold tracking-tight">{amountToWords(Number(invoice.total))}</p>
                         </div>
                         {/* <hr /> */}
@@ -189,13 +189,13 @@ export default function InvoicePage({ params }: Props) {
                         <p>{invoice.notes}</p> */}
                         <hr />
 
-                        {/* <div>
+                        <div>
                             <h6>Payment Details - MBH POWER LIMITED</h6>
                             <h6 className='fw-bold'>TIN - 00277867-0001</h6>
                             <h6 className="fw-bold">VAT Reg No - IKV06002380240</h6>
                             <h6 className="fw-bold">Bank Details- United Bank for Africa (UBA) - 1016337483</h6>
                             <h6 className="fw-bold">Account Name: MBH Power Ltd. Sort Code: 033152420</h6>
-                        </div> */}
+                        </div>
 
                         
                         <div className="row justify-content-around mt-5 ft-5">
