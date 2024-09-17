@@ -61,7 +61,7 @@ export default function InvoicePage({ params }: Props) {
     }
 
     return (
-        <div className="container mt-5 p-4 fs-5">
+        <div className="container mt-4 p-4 fs-5">
             <div className="mb-4 flex items-center justify-center gap-2">
                 <button
                     className={`font-bold py-2 px-4 rounded ${activeView === 'invoice' ? 'bg-zinc-800 text-white' : 'bg-gray-200 text-black'}`}
@@ -81,22 +81,22 @@ export default function InvoicePage({ params }: Props) {
                 <>  
                     <Card id="invoiceCapture" className="p-4 p-xl-5 my-3 my-xl-4 rounded-xl">
                     <h2 className='fw-bold d-flex flex-row align-items-center justify-content-center'>INVOICE</h2>
-                        <div className="d-flex flex-row align-items-start justify-content-between mb-3">
+                        <div className="d-flex flex-row align-items-start justify-content-between mb-1">
                             <div className="d-flex flex-column">
                                 <div className="d-flex flex-column">
-                                    <div className="mb-2">
+                                    <div className="mb-1">
                                         <span className="fw-bolder">Issue Date:&nbsp;</span>
                                         <span>{invoice.dateOfIssue}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="mb-1">
+                            <div className="mb-2">
                                 <span className="fw-bold">Invoice Number:&nbsp;</span>
                                 <span>{generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))}</span>
                             </div>
                         </div>
                         <hr className="my-3" />
-                        <Row className="mb-5">
+                        <Row className= "grid grid-cols-2 gap-4 mb-5">
                             <Col>
                                 <h6 className="fw-bold fs-5">Bill to:</h6>
                                 <div>{invoice.billFrom.name}</div>
@@ -132,7 +132,7 @@ export default function InvoicePage({ params }: Props) {
                                 ))}
                             </tbody>
                         </Table>
-                        <Row className="mt-4 justify-content-end">
+                        <Row className="mt-3 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">
                                     <span className="fw-bold">Subtotal:</span>
@@ -189,21 +189,21 @@ export default function InvoicePage({ params }: Props) {
                         <p>{invoice.notes}</p> */}
                         <hr />
 
-                        <div>
+                        {/* <div>
                             <h6>Payment Details - MBH POWER LIMITED</h6>
                             <h6 className='fw-bold'>TIN - 00277867-0001</h6>
                             <h6 className="fw-bold">VAT Reg No - IKV06002380240</h6>
                             <h6 className="fw-bold">Bank Details- United Bank for Africa (UBA) - 1016337483</h6>
                             <h6 className="fw-bold">Account Name: MBH Power Ltd. Sort Code: 033152420</h6>
-                        </div>
+                        </div> */}
 
                         
                         <div className="row justify-content-around mt-5 ft-5">
                                     <div className="col-4">
-                                    <h6 className="fw-bold fs-5">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                                    <h6 className="fw-bold fs-5">For: MBH Power Limited <br/><br/><br/><br/> Authorized Signatory</h6>
                                     </div>
                                     <div className="col-4">
-                                    <h6 className="fw-bold fs-5">For: MBH Power Limited <br/><br/><br/><br/><br/> Authorized Signatory</h6>
+                                    <h6 className="fw-bold fs-5">For: MBH Power Limited <br/><br/><br/><br/> Authorized Signatory</h6>
                                     </div>
                         </div>
                     </Card>
