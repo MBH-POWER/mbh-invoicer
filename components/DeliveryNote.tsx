@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { getInvoiceById } from '@/actions/invoices'
 import { Invoice } from '@/types/invoice'
 import { Card, Row, Col, Table } from 'react-bootstrap'
@@ -39,7 +39,8 @@ export default function DeliveryNote({ invoiceId }: Props) {
                 const pdf = new jsPDF({
                     orientation: "portrait",
                     unit: "pt",
-                    format: [612, 792],
+                    // format: [612, 792],
+                    format:'a4'
                 });
                 pdf.internal.scaleFactor = 1;
                 const imgProps = pdf.getImageProperties(imgData);

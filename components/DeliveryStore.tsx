@@ -1,5 +1,4 @@
 //Zustand store that stores delivery note data
-
 import create from 'zustand';
 
 interface DeliveryItem {
