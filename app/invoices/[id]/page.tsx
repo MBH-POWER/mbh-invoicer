@@ -46,6 +46,36 @@ export default function InvoicePage({ params }: Props) {
 const generateInvoice = () => {
     if (!invoice) return;
 
+    const summaryTableBody = [
+        [{ text: 'Subtotal:', style: 'tableHeader', alignment: 'center' }, { text: `${invoice.currency}${invoice.subTotal}`, alignment: 'right' }],
+    ];
+
+    if (Number(invoice.transportation) !== 0) {
+        summaryTableBody.push([
+            { text: 'Transportation:', style: 'tableHeader', alignment: 'right' },
+            { text: `${invoice.currency}${invoice.transportation}.00`, alignment: 'right' }
+        ]);
+    }
+
+    if (Number(invoice.installation) !== 0) {
+        summaryTableBody.push([
+            { text: 'Installation:', style: 'tableHeader', alignment: 'right' },
+            { text: `${invoice.currency}${invoice.installation}.00`, alignment: 'right' }
+        ]);
+    }
+
+    if (Number(invoice.discountAmount) !== 0) {
+        summaryTableBody.push([
+            { text: 'Discount:', style: 'tableHeader', alignment: 'right' },
+            { text: `${invoice.currency}${invoice.discountAmount} (${invoice.discountRate}%)`, alignment: 'right' }
+        ]);
+    }
+
+    summaryTableBody.push(
+        [{ text: 'Tax:', style: 'tableHeader', alignment: 'right' }, { text: `(${invoice.taxRate}%) ${invoice.currency}${invoice.taxAmount}`, alignment: 'right' }],
+        [{ text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.total}`, alignment: 'right' }]
+    );
+
     const docDefinition = {
         content: [
             { text: 'INVOICE', style: 'header' , margin: [0, 80, 0, 20]},
@@ -83,9 +113,10 @@ const generateInvoice = () => {
                 table: {
                     headerRows: 1,
                     widths: ['*', 'auto', 'auto', 'auto'],
+                    style: 'bolder',
                     body: [
                 
-                        ['Item', 'Quantity', `Unit Price (${invoice.currency})`, `Amount (${invoice.currency})`],
+                        ['Item', 'Quantity', `Unit Price (${invoice.currency})`, `Amount (${invoice.currency})`,],
                         ...invoice.items.map(item => [
                             item.name,
                             item.quantity.toString(),
@@ -96,41 +127,27 @@ const generateInvoice = () => {
                 }
             },
             {
-                columns: [
-                    { width: '*', text: '' },
-                    {
-                        width: 'auto',
-                        table: {
-                            body: [
-                                [{ text: 'Subtotal:', style: 'bold', alignment: 'right' }, { text: `${invoice.currency}${invoice.subTotal}`, alignment: 'right' }],
-                                [{ text: 'Tax:', style: 'tableHeader', alignment: 'right' }, { text: `(${invoice.taxRate}%)${invoice.currency}${invoice.taxAmount}.00`, alignment: 'right' }],
-                                [{ text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.total}`, alignment: 'right' }],
-                                // ['Subtotal:', `${invoice.currency}${invoice.subTotal}`],
-                                // ['Tax:', `(${invoice.taxRate}%) ${invoice.currency}${invoice.taxAmount}.00`],
-                                // ['Total:', `${invoice.currency}${invoice.total}`]
-                            ]
-                        },
-                        //layout: 'noBorders',
-                        layout: 'border',
-                        
-                        margin: [0, 20, 0, 0]
-                    }
-                ]
+                margin: [0, 20, 0, 0],
+                table: {
+                    widths: ['*', 'auto'],
+                    body: summaryTableBody
+                },
+                layout: 'noBorders'
             },
+            
             { canvas: [{ type: 'line', x1: 250, y1: 5, x2: 515, y2: 5, lineWidth: 2}] },
             { text: `${amountToWords(Number(invoice.total))}`, margin: [0, 10, 0, 5], italics: true, alignment: 'right', style: 'amountInWords'  },
             { canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 2 }] },
             { text: 'Payment Terms:', style: 'subheader', margin: [0, 20, 0, 5] },
             { text: invoice.paymentPlan },
             { text: 'Payment Details - MBH POWER LIMITED', style: 'subheader', margin: [0, 15, 0, 5] },
-            { text: 'TIN - 00277867-0001' },
-            { text: 'VAT Reg No - IKV06002380240' },
+            { text: 'TIN - 00277867-0001 / VAT Reg No - IKV06002380240' },
             { text: 'Bank Details- United Bank for Africa (UBA) - 1016337483' },
             { text: 'Account Name: MBH Power Ltd. Sort Code: 033152420' },
             {
                 columns: [
-                    { text: 'For: MBH Power Limited\n\n\n\nAuthorized Signatory', margin: [0, 50, 0, 0], bold: 'true' },
-                    { text: 'For: MBH Power Limited\n\n\n\nAuthorized Signatory', margin: [0, 50, 0, 0], bold: 'true' }
+                    { text: 'For: MBH Power Limited\n\n\n\nAuthorized Signatory', margin: [60, 40, 0, 0], bold: 'true' },
+                    { text: 'For: MBH Power Limited\n\n\n\nAuthorized Signatory', margin: [0, 40, 60, 0], bold: 'true', alignment: 'right' }
                 ]
             }
         ],
@@ -154,12 +171,11 @@ const generateInvoice = () => {
                 fontSize: 11,
                 italics: true,
                 background: '#f0f0f0',
-                // background: 'black',
                 padding: [5, 2, 5, 2]
             }
         },
         defaultStyle: {
-            fontSize: 10
+            fontSize: 9
         },
         
     };
@@ -167,29 +183,6 @@ const generateInvoice = () => {
     //@ts-ignore
     pdfMake.createPdf(docDefinition).download(`invoice-${invoice?.invoiceNumber || '001'}.pdf`);
 };
-
-    // const generateInvoice = () => {
-    //     const element = document.getElementById('invoiceCapture');
-    //     if (element) {
-    //         html2canvas(element).then((canvas) => {
-    //             const imgData = canvas.toDataURL("image/png", 1.0);
-    //             const pdf = new jsPDF({
-    //                 orientation: "portrait",
-    //                 // unit: 'pt',
-    //                 unit: "px",
-    //                 // format: [612, 792],
-    //                 format: "a4"
-    //             });
-    //             pdf.internal.scaleFactor = 1;
-    //             const imgProps = pdf.getImageProperties(imgData);
-    //             const pdfWidth = pdf.internal.pageSize.getWidth();
-    //             const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    //             const topPadding = 80;
-    //             pdf.addImage(imgData, "PNG", 0, topPadding, pdfWidth, pdfHeight);
-    //             pdf.save(`invoice-${invoice?.invoiceNumber || '001'}.pdf`);
-    //         });
-    //     }
-    // };
 
     if (!invoice) {
         return <div>Loading...</div>

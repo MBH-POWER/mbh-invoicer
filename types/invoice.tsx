@@ -1,5 +1,6 @@
 import { User } from "firebase/auth";
 import firebase from "firebase/compat/app";
+// import { DeliveryItem } from "@/components/DeliveryStore";
 
 export interface InvoiceItem {
     id: string;
@@ -38,6 +39,7 @@ export interface Invoice {
     transportation: any;
     installation: any;
     // deliveryItems: DeliveryItem[];
+    
 }
 
 

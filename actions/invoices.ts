@@ -1,7 +1,8 @@
 import { database as db } from "@/lib/firebase";
 import { Invoice } from "@/types/invoice";
 import { startAfter, collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy, Query, QueryDocumentSnapshot } from "firebase/firestore";
-
+// import { DeliveryItem } from "@/types/invoice";
+import { DeliveryItem } from "@/components/DeliveryStore";
 
 // export const getInvoicesWithPagination = async (pageSize: number, lastVisible?: QueryDocumentSnapshot<Invoice>) => {
 //     try {
@@ -105,7 +106,7 @@ export const getAllInvoices = async () => {
 export const createInvoice = async (invoice: Invoice) => {
     try {
         const invoicesRef = collection(db, "invoices");
-        await setDoc(doc(invoicesRef, String(invoice.invoiceNumber)), invoice);
+        await setDoc(doc(invoicesRef, String(invoice.invoiceNumber)),invoice);
         console.log("Invoice created successfully!");
     } catch (error) {
         console.error("Error creating invoice: ", error);
@@ -148,3 +149,13 @@ export const deleteInvoice = async (invoiceId: string) => {
         console.error("Error deleting invoice: ", error);
     }
 };
+
+// export const saveDeliveryItems = async (invoiceId: string, deliveryItems: DeliveryItem[]) => {
+//     try {
+//       const deliveryRef = doc(db, "invoices", invoiceId, "delivery", "items");
+//       await setDoc(deliveryRef, { items: deliveryItems });
+//       console.log("Delivery items saved successfully!");
+//     } catch (error) {
+//       console.error("Error saving delivery items: ", error);
+//     }
+//   };

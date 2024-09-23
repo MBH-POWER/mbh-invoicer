@@ -8,13 +8,16 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { generateInvoiceNumber } from '@/lib/utils'
 import DisplayData from './DisplayData';
 import { useDeliveryStore } from './DeliveryStore';
+import pdfMake from 'pdfmake/build/pdfmake'
+import pdfFonts from 'pdfmake/build/vfs_fonts'
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
 interface Props {
     invoiceId: string;
 }
-
 
 export default function DeliveryNote({ invoiceId }: Props) {
     const [invoice, setInvoice] = useState<Invoice | null>(null)
@@ -25,34 +28,150 @@ export default function DeliveryNote({ invoiceId }: Props) {
             const inv = await getInvoiceById(invoiceId)
             if (inv) {
                 setInvoice(inv);
-        }
-    };
+            }
+        };
 
         fetchInvoice();
     }, [invoiceId])
 
     const generateDeliveryNote = () => {
-        const element = document.getElementById('deliveryNoteCapture');
-        if (element) {
-            html2canvas(element).then((canvas) => {
-                const imgData = canvas.toDataURL("image/png", 1.0);
-                const pdf = new jsPDF({
-                    orientation: "portrait",
-                    unit: "pt",
-                    // format: [612, 792],
-                    format:'a4'
-                });
-                pdf.internal.scaleFactor = 1;
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                const topPadding = 80;
-                pdf.addImage(imgData, "PNG", 0, topPadding, pdfWidth, pdfHeight);
-                pdf.save(`delivery-note-${invoice?.invoiceNumber || '001'}.pdf`);
+        if (!invoice) return;
 
-            });
-        }
+        const deliveryItems = delivery.map(item => [
+            item.itemName,
+            item.itemCode,
+            item.quantity.toString()
+        ]);
+
+        const docDefinition = {
+            content: [
+                { text: 'DELIVERY NOTE', style: 'header', margin: [0, 80, 0, 20] },
+                {
+                    columns: [
+                        {
+                            text: [
+                                { text: 'Date: ', bold: true },
+                                invoice.dateOfIssue
+                            ]
+                        },
+                        {
+                            text: [
+                                { text: 'Delivery No: ', bold: true },
+                                generateInvoiceNumber(invoice.dateOfIssue, String(invoice.invoiceNumber))
+                            ],
+                            alignment: 'right'
+                        }
+                    ]
+                },
+                { canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, lineWidth: 1 }] },
+                {
+                    columns: [
+                        {
+                            text: [
+                                { text: 'Bill to:\n', style: 'subheader' },
+                                invoice.billFrom.name + '\n',
+                                invoice.billFrom.address
+                            ]
+                        },
+                        {
+                            text: [
+                                { text: 'Delivered to:\n', style: 'subheader' },
+                                invoice.billTo.name + '\n',
+                                invoice.billTo.address
+                            ]
+                        }
+                    ],
+                    columnGap: 20,
+                    margin: [0, 20, 0, 20]
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*', '*'],
+                        body: [
+                            // ['Item', 'Code', 'Quantity'],
+                            [
+                                { text: 'Item', bold: true },
+                                { text: 'Code', bold: true },
+                                { text: 'Quantity', bold: true }
+                            ],
+                            ...deliveryItems
+                        ]
+                    }
+                },
+                { text: invoice.notes, margin: [0, 20, 0, 20], bold: true },
+                {
+                    columns: [
+                        {
+                            text:
+                                'For: MBH Power Limited\n\n\n\nAuthorized Signatory',
+                            alignment: 'center', bold:'true'
+                        },
+                        {
+                            text:
+                                'For: Customer (Received)\n\n\n\nAuthorized Signatory',
+                            alignment: 'center', bold:'true'
+                        },
+                    ],
+                    margin: [0, 100, 0, 0]
+                }
+            ],
+            styles: {
+                header: {
+                    fontSize: 18,
+                    bold: true,
+                    alignment: 'center',
+                    margin: [0, 0, 0, 20]
+                },
+                subheader: {
+                    fontSize: 14,
+                    bold: true,
+                    margin: [0, 0, 0, 5]
+                }
+            }
+        };
+        //@ts-ignore
+        pdfMake.createPdf(docDefinition).download(`delivery-note-${invoice.invoiceNumber || '001'}.pdf`);
     };
+
+
+// export default function DeliveryNote({ invoiceId }: Props) {
+//     const [invoice, setInvoice] = useState<Invoice | null>(null)
+//     const { delivery } = useDeliveryStore();
+    
+//     useEffect(() => {
+//         const fetchInvoice = async () => {
+//             const inv = await getInvoiceById(invoiceId)
+//             if (inv) {
+//                 setInvoice(inv);
+//         }
+//     };
+
+//         fetchInvoice();
+//     }, [invoiceId])
+
+//     const generateDeliveryNote = () => {
+//         const element = document.getElementById('deliveryNoteCapture');
+//         if (element) {
+//             html2canvas(element).then((canvas) => {
+//                 const imgData = canvas.toDataURL("image/png", 1.0);
+//                 const pdf = new jsPDF({
+//                     orientation: "portrait",
+//                     unit: "pt",
+//                     // format: [612, 792],
+//                     format:'a4'
+//                 });
+//                 pdf.internal.scaleFactor = 1;
+//                 const imgProps = pdf.getImageProperties(imgData);
+//                 const pdfWidth = pdf.internal.pageSize.getWidth();
+//                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+//                 const topPadding = 80;
+//                 pdf.addImage(imgData, "PNG", 0, topPadding, pdfWidth, pdfHeight);
+//                 pdf.save(`delivery-note-${invoice?.invoiceNumber || '001'}.pdf`);
+
+//             });
+//         }
+//     };
 
     if (!invoice) {
         return <div>Loading...</div>

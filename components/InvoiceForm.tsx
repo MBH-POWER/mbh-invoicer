@@ -18,6 +18,9 @@ import InvoiceItemComponent from "./InvoiceItem";
 import DisplayData from "./DisplayData";
 import DeliveryNote from "./DeliveryNote";
 import DeliveryForm from "./DeliveryForm";
+import { useDeliveryStore } from "./DeliveryStore";
+import { createInvoice } from "@/actions/invoices";
+
 
 const InvoiceForm: React.FC = () => {
     const { user, setUser } = useAuth();
@@ -56,6 +59,7 @@ const InvoiceForm: React.FC = () => {
                 quantity: 1,
             },
         ] as InvoiceItem[],
+        
     });
 
 
@@ -223,6 +227,8 @@ const InvoiceForm: React.FC = () => {
     const openModal = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleCalculateTotal();
+
+        const { delivery} = useDeliveryStore.getState();
         
         
         const invoice: Invoice = {
@@ -257,6 +263,7 @@ const InvoiceForm: React.FC = () => {
             installation: state.installation,
             // deliveryItems: delivery,
         };
+        
         setInvoce(invoice)
         setIsOpen(true);
     };

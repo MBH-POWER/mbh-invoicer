@@ -1,13 +1,13 @@
 //Zustand store that stores delivery note data
 import create from 'zustand';
 
-interface DeliveryItem {
+export interface DeliveryItem {
   itemName: string;
   itemCode: string;
   quantity: number;
 }
 
-interface DeliveryStore {
+export interface DeliveryStore {
   delivery: DeliveryItem[];
   addItem: () => void;
   removeItem: (index: number) => void;
