@@ -21,7 +21,6 @@ interface Props {
 
 export default function DeliveryNote({ invoiceId }: Props) {
     const [invoice, setInvoice] = useState<Invoice | null>(null)
-    const { delivery } = useDeliveryStore();
     
     useEffect(() => {
         const fetchInvoice = async () => {
@@ -37,7 +36,7 @@ export default function DeliveryNote({ invoiceId }: Props) {
     const generateDeliveryNote = () => {
         if (!invoice) return;
 
-        const deliveryItems = delivery.map(item => [
+        const deliveryItems = invoice.delivery.map(item => [
             item.itemName,
             item.itemCode,
             item.quantity.toString()
@@ -135,43 +134,6 @@ export default function DeliveryNote({ invoiceId }: Props) {
     };
 
 
-// export default function DeliveryNote({ invoiceId }: Props) {
-//     const [invoice, setInvoice] = useState<Invoice | null>(null)
-//     const { delivery } = useDeliveryStore();
-    
-//     useEffect(() => {
-//         const fetchInvoice = async () => {
-//             const inv = await getInvoiceById(invoiceId)
-//             if (inv) {
-//                 setInvoice(inv);
-//         }
-//     };
-
-//         fetchInvoice();
-//     }, [invoiceId])
-
-//     const generateDeliveryNote = () => {
-//         const element = document.getElementById('deliveryNoteCapture');
-//         if (element) {
-//             html2canvas(element).then((canvas) => {
-//                 const imgData = canvas.toDataURL("image/png", 1.0);
-//                 const pdf = new jsPDF({
-//                     orientation: "portrait",
-//                     unit: "pt",
-//                     // format: [612, 792],
-//                     format:'a4'
-//                 });
-//                 pdf.internal.scaleFactor = 1;
-//                 const imgProps = pdf.getImageProperties(imgData);
-//                 const pdfWidth = pdf.internal.pageSize.getWidth();
-//                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-//                 const topPadding = 80;
-//                 pdf.addImage(imgData, "PNG", 0, topPadding, pdfWidth, pdfHeight);
-//                 pdf.save(`delivery-note-${invoice?.invoiceNumber || '001'}.pdf`);
-
-//             });
-//         }
-//     };
 
     if (!invoice) {
         return <div>Loading...</div>
@@ -219,7 +181,7 @@ export default function DeliveryNote({ invoiceId }: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                            {delivery.map((item, index) => (
+                            {invoice.delivery.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.itemName}</td>
                                     <td>{item.itemCode}</td>

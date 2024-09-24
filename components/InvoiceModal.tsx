@@ -2,7 +2,7 @@
 import React from "react";
 import { Modal, Card, Row, Col, Table, Button } from "react-bootstrap";
 import { useRouter } from 'next/navigation';
-import { Invoice, Delivery, DeliveryItem } from "@/types/invoice";
+import { Invoice} from "@/types/invoice";
 import { createInvoice } from "@/actions/invoices";
 import { amountToWords } from "@/lib/utils";
 import DisplayData from "./DisplayData";
@@ -35,12 +35,16 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
     const handleSaveInvoice = async () => {
         try {
             await createInvoice(invoice);
+            // await saveDeliveryItems(delivery);
+
+
             closeModal();
             router.push(`/invoices/${invoice.invoiceNumber}`);
         } catch (error) {
             console.error("Error saving invoice:", error);
         }
     };
+    
 
 
     return (
@@ -105,6 +109,24 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                     <Table striped bordered>
                         <thead>
                             <tr>
+                                <th>Item</th>
+                                <th>Code</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {invoice.delivery.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.itemName}</td>
+                                    <td>{item.itemCode}</td>
+                                    <td>{item.quantity}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    {/* <Table striped bordered>
+                        <thead>
+                            <tr>
                                 <th>Item Name</th>
                                 <th>Code</th>
                                 <th>Quantity</th>
@@ -119,7 +141,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                                 </tr>
                             ))}
                         </tbody>
-                    </Table>
+                    </Table> */}
 
                     <Row className="mt-4 justify-content-end">
                         <Col lg={6}>

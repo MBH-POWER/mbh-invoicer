@@ -47,12 +47,12 @@ const generateInvoice = () => {
     if (!invoice) return;
 
     const summaryTableBody = [
-        [{ text: 'Subtotal:', style: 'tableHeader', alignment: 'center' }, { text: `${invoice.currency}${invoice.subTotal}`, alignment: 'right' }],
+        [{ text: 'Subtotal:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.subTotal}`, alignment: 'right' }],
     ];
 
     if (Number(invoice.transportation) !== 0) {
         summaryTableBody.push([
-            { text: 'Transportation:', style: 'tableHeader', alignment: 'right' },
+            { text: 'Transportation:', style: 'tableHeader', alignment: 'right' }, 
             { text: `${invoice.currency}${invoice.transportation}.00`, alignment: 'right' }
         ]);
     }

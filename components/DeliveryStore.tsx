@@ -1,18 +1,9 @@
 //Zustand store that stores delivery note data
 import create from 'zustand';
+import { DeliveryStore } from '@/types/invoice';
 
-export interface DeliveryItem {
-  itemName: string;
-  itemCode: string;
-  quantity: number;
-}
 
-export interface DeliveryStore {
-  delivery: DeliveryItem[];
-  addItem: () => void;
-  removeItem: (index: number) => void;
-  updateItem: (index: number, field: keyof DeliveryItem, value: string | number) => void;
-}
+
 
 export const useDeliveryStore = create<DeliveryStore>((set) => ({
   delivery: [{ itemName: '', itemCode: '', quantity: 1 }],

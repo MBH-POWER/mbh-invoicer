@@ -15,18 +15,14 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { amountToWords } from "@/lib/utils";
 import InvoiceItemComponent from "./InvoiceItem";
-import DisplayData from "./DisplayData";
-import DeliveryNote from "./DeliveryNote";
 import DeliveryForm from "./DeliveryForm";
-import { useDeliveryStore } from "./DeliveryStore";
-import { createInvoice } from "@/actions/invoices";
+import DeliveryItemComponent from "./DeliveryItem";
 
 
-const InvoiceForm: React.FC = () => {
+export const InvoiceForm: React.FC = () => {
     const { user, setUser } = useAuth();
-    const [invoice, setInvoce] = useState<Invoice>()
+    const [invoice, setInvoce] = useState<Invoice>();
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [delivery, setDelivery] = useState();
     const [state, setState] = useState({
         currency: "₦",
         currentDate: new Date().toLocaleDateString(),
@@ -59,7 +55,10 @@ const InvoiceForm: React.FC = () => {
                 quantity: 1,
             },
         ] as InvoiceItem[],
-        
+        delivery: [
+            {
+                id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
+                itemName: '', itemCode: '', quantity: 1 }] as DeliveryItem[], 
     });
 
 
@@ -93,7 +92,7 @@ const InvoiceForm: React.FC = () => {
 
     const handleCalculateTotal = useCallback(() => {
 
-        const { items, taxRate, discountRate, transportation, installation, taxOnTransportation, taxOnInstallation } = state;
+        const { items, delivery, taxRate, discountRate, transportation, installation, taxOnTransportation, taxOnInstallation } = state;
         const newSubTotal = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
             .toFixed(2);
 
@@ -159,7 +158,7 @@ const InvoiceForm: React.FC = () => {
         }));
 
 
-    }, [state.items, state.taxRate, state.discountRate, state.transportation, state.installation, state.taxOnTransportation, state.taxOnInstallation]);
+    }, [state.items, state.delivery, state.taxRate, state.discountRate, state.transportation, state.installation, state.taxOnTransportation, state.taxOnInstallation]);
         
 
  
@@ -167,6 +166,10 @@ const InvoiceForm: React.FC = () => {
     useEffect(() => {
         handleCalculateTotal();
     }, [handleCalculateTotal]);
+    //                         DelItemizedItemEdit={DelItemizedItemEdit}
+    //                         DelRowAdd={DelhandleAddEvent}
+    //                         DelRowDel={DelhandleRowDel}
+    //                         delitems={state.delivery} />
 
     const handleRowDel = (item: InvoiceItem) => {
         setState((prevState) => ({
@@ -174,6 +177,14 @@ const InvoiceForm: React.FC = () => {
             items: prevState.items.filter((i) => i.id !== item.id),
         }));
     };
+
+    const DelhandleRowDel = (item: DeliveryItem) => {
+        setState((prevState) => ({
+            ...prevState,
+            delivery: prevState.delivery.filter((i) => i.id !== item.id),
+        }));
+    };
+
 
     const handleAddEvent = () => {
         const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
@@ -190,12 +201,34 @@ const InvoiceForm: React.FC = () => {
         }));
     };
 
+    const DelhandleAddEvent = () => {
+        const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+        const newDelItem: DeliveryItem = {
+            id, itemName: "", itemCode: "", quantity: 1,
+        };
+        setState((prevState) => ({
+            ...prevState,
+            delivery: [...prevState.delivery, newDelItem],
+        }));
+    };
+
     const onItemizedItemEdit = (evt: React.ChangeEvent<HTMLInputElement>) => {
         const { id, name, value } = evt.target;
 
         setState((prevState) => ({
             ...prevState,
             items: prevState.items.map((item) =>
+                item.id === id ? { ...item, [name]: value } : item
+            ),
+        }));
+    };
+
+    const DelItemizedItemEdit = (evt: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, name, value } = evt.target;
+
+        setState((prevState) => ({
+            ...prevState,
+            delivery: prevState.delivery.map((item) =>
                 item.id === id ? { ...item, [name]: value } : item
             ),
         }));
@@ -212,6 +245,16 @@ const InvoiceForm: React.FC = () => {
         handleCalculateTotal();
     };
 
+    const DelhandleChange = (name: string) => (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const value = event.target.value;
+        setState((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
     if (!user) {
         return (
             <div className="w-full min-h-screen flex items-center justify-center">
@@ -220,15 +263,11 @@ const InvoiceForm: React.FC = () => {
         );
     }
 
-    // const handleDeliveryChange = (newDelivery: DeliveryItem[]) => {
-    //     setDelivery(newDelivery);
-    // };
-
     const openModal = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         handleCalculateTotal();
 
-        const { delivery} = useDeliveryStore.getState();
+        // const { delivery} = useDeliveryStore.getState();
         
         
         const invoice: Invoice = {
@@ -261,7 +300,7 @@ const InvoiceForm: React.FC = () => {
             createdAt: new Date(),
             transportation: state.transportation,
             installation: state.installation,
-            // deliveryItems: delivery,
+            delivery: state.delivery,
         };
         
         setInvoce(invoice)
@@ -392,7 +431,15 @@ const InvoiceForm: React.FC = () => {
                             currency={state.currency}
                             items={state.items}
                         />
-                        <DeliveryForm />
+                        <DeliveryItemComponent
+                            DelItemizedItemEdit={DelItemizedItemEdit}
+                            DelRowAdd={DelhandleAddEvent}
+                            DelRowDel={DelhandleRowDel}
+                            delivery={state.delivery} 
+                        />
+                        
+                        
+                        {/* <DeliveryForm /> */}
                         <Row className="mt-4 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">
@@ -603,14 +650,14 @@ const InvoiceForm: React.FC = () => {
                             Review Invoice
                         </Button> */}
                         <Button
-    type="submit"
-    className="d-block w-100"
-    style={{ backgroundColor: '#4caf50', color: '#fff',
-        border: 'none'
-     }}
->
-    Review Invoice
-</Button>
+                            type="submit"
+                            className="d-block w-100"
+                            style={{ backgroundColor: '#4caf50', color: '#fff',
+                                border: 'none'
+                            }}
+                        >
+                            Review Invoice
+                        </Button>
 
                     </div>
                 </Col>
