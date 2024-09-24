@@ -6,7 +6,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { generateInvoiceNumber } from '@/lib/utils'
-import DisplayData from './DisplayData';
+// import DisplayData from './DisplayData';
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 
