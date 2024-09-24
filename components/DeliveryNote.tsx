@@ -7,7 +7,6 @@ import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { generateInvoiceNumber } from '@/lib/utils'
 import DisplayData from './DisplayData';
-import { useDeliveryStore } from './DeliveryStore';
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 

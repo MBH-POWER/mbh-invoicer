@@ -5,12 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Invoice} from "@/types/invoice";
 import { createInvoice } from "@/actions/invoices";
 import { amountToWords } from "@/lib/utils";
-import DisplayData from "./DisplayData";
-import InvoiceForm from "./InvoiceForm";
-import DeliveryForm from "./DeliveryForm";
-import { useDeliveryStore } from "./DeliveryStore";
-
-
 
 
 
@@ -26,7 +20,6 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
     invoice,
 }) => {
     const router = useRouter();
-    const { delivery } = useDeliveryStore();
 
     if (!invoice) {
         return null

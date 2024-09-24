@@ -61,7 +61,7 @@ const DeliveryRow: React.FC<DeliveryRowProps> = ({ item, DelItemizedItemEdit, De
 
     return (
         <tr>
-            <td style={{ width: "100%" }}>
+            <td style={{ width: "50%" }}>
                 <DelEditableField
                     DelItemizedItemEdit={DelItemizedItemEdit}
                     DelcellData={{
@@ -74,7 +74,7 @@ const DeliveryRow: React.FC<DeliveryRowProps> = ({ item, DelItemizedItemEdit, De
                 />
                 
             </td>
-            <td style={{ width: "50%" }}>
+            <td style={{ width: "30%" }}>
                 <DelEditableField
                     DelItemizedItemEdit={DelItemizedItemEdit}
                     DelcellData={{
@@ -88,7 +88,7 @@ const DeliveryRow: React.FC<DeliveryRowProps> = ({ item, DelItemizedItemEdit, De
                 />
                 
             </td>
-            <td style={{ minWidth: "50px" }}>
+            <td style={{ width: "20%" }}>
                 <DelEditableField
                     DelItemizedItemEdit={DelItemizedItemEdit}
                     DelcellData={{
