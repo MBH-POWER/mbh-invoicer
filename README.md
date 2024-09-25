@@ -7,12 +7,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
     apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId
   
 - In your .env file add this
-    NEXT_PUBLIC_FIREBASE_API_KEY= 'your-api-key'
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN= 'your-domain- usually blabla bla.com'
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID= 'add-project-id'
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET= 'add storage bucket'
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID= 'your-sender-id'
-    NEXT_PUBLIC_FIREBASE_APP_ID= 'your-app-id'
+   -  NEXT_PUBLIC_FIREBASE_API_KEY= 'your-api-key'
+   -  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN= 'your-domain- usually blabla bla.com'
+   -  NEXT_PUBLIC_FIREBASE_PROJECT_ID= 'add-project-id'
+   -  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET= 'add storage bucket'
+   -  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID= 'your-sender-id'
+   -  NEXT_PUBLIC_FIREBASE_APP_ID= 'your-app-id'
 
 - run the development server:
 
