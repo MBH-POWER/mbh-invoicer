@@ -8,7 +8,6 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { amountToWords, generateInvoiceNumber } from '@/lib/utils'
-//import { Card } from '@/components/ui/card'
 import DeliveryNote from '@/components/DeliveryNote'
 import 'jspdf-autotable'
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -49,20 +48,26 @@ const generateInvoice = () => {
     // This expression first checks if we have transportation, installation and discount as it is optional
     // then appends it to the pdf
     const summaryTableBody = [
-        [{ text: 'Subtotal:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.subTotal}`, alignment: 'right' }],
+        [
+            { text: 'Subtotal:', style: 'tableHeader', alignment: 'right' }, 
+            { 
+                text: `${invoice.currency}${parseFloat(invoice.subTotal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 
+                alignment: 'right' 
+              }
+        ],
     ];
 
     if (Number(invoice.transportation) !== 0) {
         summaryTableBody.push([
             { text: 'Transportation:', style: 'tableHeader', alignment: 'right' }, 
-            { text: `${invoice.currency}${invoice.transportation}.00`, alignment: 'right' }
+            { text: `${invoice.currency}${parseFloat(invoice.transportation).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, alignment: 'right' }
         ]);
     }
 
     if (Number(invoice.installation) !== 0) {
         summaryTableBody.push([
             { text: 'Installation:', style: 'tableHeader', alignment: 'right' },
-            { text: `${invoice.currency}${invoice.installation}.00`, alignment: 'right' }
+            { text: `${invoice.currency}${parseFloat(invoice.installation).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, alignment: 'right' }
         ]);
     }
 
@@ -74,8 +79,8 @@ const generateInvoice = () => {
     }
 
     summaryTableBody.push(
-        [{ text: 'Tax:', style: 'tableHeader', alignment: 'right' }, { text: `(${invoice.taxRate}%) ${invoice.currency}${invoice.taxAmount}.00`, alignment: 'right' }],
-        [{ text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.total}`, alignment: 'right' }]
+        [{ text: 'Tax:', style: 'tableHeader', alignment: 'right' }, { text: `(${invoice.taxRate}%) ${invoice.currency}${parseFloat(invoice.taxAmount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, alignment: 'right' }],
+        [{ text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${parseFloat(invoice.total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, alignment: 'right' }]
     );
 
     // pdf generation mainly starts here
@@ -123,8 +128,9 @@ const generateInvoice = () => {
                         ...invoice.items.map(item => [
                             item.name,
                             item.quantity.toString(),
-                            item.price,
-                            (parseFloat(item.price) * item.quantity).toFixed(2)
+                            parseFloat(item.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2}),
+                            (parseFloat(item.price) * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                            // (parseFloat(item.price) * item.quantity).toFixed(2)
                         ])
                     ]
                 }
