@@ -1,4 +1,5 @@
-// Main page to create invoice
+// Main component to create invoice
+// It is imported by page.tsx in the create folder
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Row from "react-bootstrap/Row";
@@ -370,7 +371,7 @@ export const InvoiceForm: React.FC = () => {
                                 <Form.Control
                                     placeholder="Email address / One Time Customer"
                                     value={state.billFromEmail}
-                                    type="email"
+                                    type="text"
                                     name="billFromEmail"
                                     className="my-2"
                                     onChange={handleChange("billFromEmail")}
@@ -404,7 +405,7 @@ export const InvoiceForm: React.FC = () => {
                                 <Form.Control
                                     placeholder="Email address / One Time Customer"
                                     value={state.billToEmail}
-                                    type="email"
+                                    type="text"
                                     name="billToEmail"
                                     className="my-2"
                                     onChange={handleChange("billToEmail")}

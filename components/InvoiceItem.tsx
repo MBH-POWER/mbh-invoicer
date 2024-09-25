@@ -1,3 +1,5 @@
+// Component that takes in the item name, price and quantity in the create invoice page
+// This component is called in invoiceform
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
@@ -62,7 +64,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
 
     return (
         <tr>
-            <td style={{ width: "100%" }}>
+            <td style={{ width: "60%" }}>
                 <EditableField
                     onItemizedItemEdit={onItemizedItemEdit}
                     cellData={{
@@ -73,16 +75,6 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                         id: item.id,
                     }}
                 />
-                {/* <EditableField
-                    onItemizedItemEdit={onItemizedItemEdit}
-                    cellData={{
-                        type: "text",
-                        name: "code",
-                        placeholder: "Item Code",
-                        value: item.code,
-                        id: item.id,
-                    }}
-                /> */}
             </td>
             <td style={{ minWidth: "70px" }}>
                 <EditableField

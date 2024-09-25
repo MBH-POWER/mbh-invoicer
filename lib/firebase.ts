@@ -1,4 +1,5 @@
 // firebaseConfig.ts
+// Create your own .env files and get your config details from firebase
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { Database, getDatabase } from "firebase/database";

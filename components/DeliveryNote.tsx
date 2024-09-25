@@ -1,12 +1,10 @@
+//Saved page for delivery note
 import React, { useEffect, useState, useRef } from 'react'
 import { getInvoiceById } from '@/actions/invoices'
 import { Invoice } from '@/types/invoice'
 import { Card, Row, Col, Table } from 'react-bootstrap'
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { generateInvoiceNumber } from '@/lib/utils'
-// import DisplayData from './DisplayData';
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 
@@ -32,6 +30,7 @@ export default function DeliveryNote({ invoiceId }: Props) {
         fetchInvoice();
     }, [invoiceId])
 
+    // Handles pdf generation for delivery note
     const generateDeliveryNote = () => {
         if (!invoice) return;
 

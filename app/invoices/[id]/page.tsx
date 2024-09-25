@@ -42,10 +42,12 @@ export default function InvoicePage({ params }: Props) {
     }, [params.id])
 
    
-
+// This function is in charge of generating the pdf
 const generateInvoice = () => {
     if (!invoice) return;
 
+    // This expression first checks if we have transportation, installation and discount as it is optional
+    // then appends it to the pdf
     const summaryTableBody = [
         [{ text: 'Subtotal:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.subTotal}`, alignment: 'right' }],
     ];
@@ -72,10 +74,11 @@ const generateInvoice = () => {
     }
 
     summaryTableBody.push(
-        [{ text: 'Tax:', style: 'tableHeader', alignment: 'right' }, { text: `(${invoice.taxRate}%) ${invoice.currency}${invoice.taxAmount}`, alignment: 'right' }],
+        [{ text: 'Tax:', style: 'tableHeader', alignment: 'right' }, { text: `(${invoice.taxRate}%) ${invoice.currency}${invoice.taxAmount}.00`, alignment: 'right' }],
         [{ text: 'Total:', style: 'tableHeader', alignment: 'right' }, { text: `${invoice.currency}${invoice.total}`, alignment: 'right' }]
     );
 
+    // pdf generation mainly starts here
     const docDefinition = {
         content: [
             { text: 'INVOICE', style: 'header' , margin: [0, 80, 0, 20]},
@@ -184,11 +187,13 @@ const generateInvoice = () => {
     pdfMake.createPdf(docDefinition).download(`invoice-${invoice?.invoiceNumber || '001'}.pdf`);
 };
 
+
     if (!invoice) {
         return <div>Loading...</div>
     }
 
     return (
+        // This is what shows in the saved page on screen
         <div className="container mt-3 p-3 fs-6">
             <div className="mb-4 flex items-center justify-center gap-2">
                 <button
@@ -346,6 +351,7 @@ const generateInvoice = () => {
                     </div>
                 </>
             ) : (
+                // Imports the deliverynote component so it can also be viewed on the page
                 <DeliveryNote invoiceId={params.id} />
             )}
         </div>

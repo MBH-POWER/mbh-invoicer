@@ -1,3 +1,5 @@
+// uploading data to firebase
+
 import { database as db } from "@/lib/firebase";
 import { Invoice } from "@/types/invoice";
 import { startAfter, collection, query, getDocs, doc, setDoc, updateDoc, deleteDoc, getDoc, limit, orderBy, Query, QueryDocumentSnapshot } from "firebase/firestore";

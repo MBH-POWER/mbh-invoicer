@@ -1,3 +1,6 @@
+// Page that shows on screen when you want to create invoice
+// It uses the invoiceform component
+
 "use client"
 import InvoiceForm from '@/components/InvoiceForm'
 import Container from "react-bootstrap/Container";

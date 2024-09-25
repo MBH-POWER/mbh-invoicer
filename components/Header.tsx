@@ -1,4 +1,4 @@
-// Home Page
+// Header that shows across the app
 "use client"
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';

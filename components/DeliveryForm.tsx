@@ -1,3 +1,7 @@
+// I used this to test when i wanted to create the delivery component
+// It uses zustand state from deliverystore.tsx
+// It is no longer part of the code and should be deleted but i decided to just comment them out
+
 // import React from 'react';
 // import { Row, Col, Form, Button } from 'react-bootstrap';
 // import DisplayData from './DisplayData';

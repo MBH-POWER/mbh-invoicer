@@ -1,8 +1,10 @@
+// This stored delivery data in a zustand state but i didnt use it again
+// This code has no relevance in the code any more
+// It should be deleted but I'd do so later
+
+
 // //Zustand store that stores delivery note data
 // import create from 'zustand';
-
-
-
 
 
 // export const useDeliveryStore = create<DeliveryStore>((set) => ({

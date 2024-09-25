@@ -1,3 +1,6 @@
+// Can't remember if this page is later used as i later changed the way the pdf was generated and placed it in
+// the invoices\[id] page.tsx direct  and for the delivery in the delivery note 
+
 // @ts-ignore
 import html2pdf from 'html2pdf.js';
 import { BiCloudDownload } from "react-icons/bi";
