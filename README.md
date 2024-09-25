@@ -45,6 +45,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deployment
 It is deployed on my netlify account and any new push to remote github repo redploys the app, you don't need to do anything, just wait 5-10 minutes after deployment,
+you should see your changes
 if it doesn't it means there's an error in your code (to know you'd have to contact me as it's my account I used), but as long as you write good code it'll pass.
 
 
