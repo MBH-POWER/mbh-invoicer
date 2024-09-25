@@ -121,7 +121,7 @@ export default function DeliveryNote({ invoiceId }: Props) {
                     margin: [0, 0, 0, 20]
                 },
                 subheader: {
-                    fontSize: 14,
+                    fontSize: 12,
                     bold: true,
                     margin: [0, 0, 0, 5]
                 }

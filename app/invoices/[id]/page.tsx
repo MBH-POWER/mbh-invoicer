@@ -123,8 +123,13 @@ const generateInvoice = () => {
                     widths: ['*', 'auto', 'auto', 'auto'],
                     style: 'bolder',
                     body: [
-                
-                        ['Item', 'Quantity', `Unit Price (${invoice.currency})`, `Amount (${invoice.currency})`,],
+
+                        [
+                            { text: 'Item', bold: true },
+                            { text: 'Quantity', bold: true },
+                            { text: `Unit Price (${invoice.currency})`, bold: true },
+                            { text: `Amount (${invoice.currency})`, bold: true }
+                        ],
                         ...invoice.items.map(item => [
                             item.name,
                             item.quantity.toString(),
