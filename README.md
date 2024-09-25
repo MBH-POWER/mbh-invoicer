@@ -2,7 +2,19 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+- Create your own .env file and add this details you get from your firebase project, it should include
+
+    apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId
+  
+- In your .env file add this
+    NEXT_PUBLIC_FIREBASE_API_KEY= 'your-api-key'
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN= 'your-domain- usually blabla bla.com'
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID= 'add-project-id'
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET= 'add storage bucket'
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID= 'your-sender-id'
+    NEXT_PUBLIC_FIREBASE_APP_ID= 'your-app-id'
+
+- run the development server:
 
 ```bash
 npm run dev
@@ -15,8 +27,10 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- For authentication for signup give permission from your fire base to a new mail and password or add a mail to whitelist in the route.ts file
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
@@ -29,11 +43,10 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deployment
+It is deployed on my netlify account and any new push to remote github repo redploys the app, you don't need to do anything, just wait 5-10 minutes after deployment,
+if it doesn't it means there's an error in your code (to know you'd have to contact me as it's my account I used), but as long as you write good code it'll pass.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 
 
