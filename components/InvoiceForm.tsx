@@ -17,6 +17,7 @@ import { auth } from "@/lib/firebase";
 import { amountToWords } from "@/lib/utils";
 import InvoiceItemComponent from "./InvoiceItem";
 import DeliveryItemComponent from "./DeliveryItem";
+import Decimal from 'decimal.js';
 
 
 export const InvoiceForm: React.FC = () => {
@@ -90,74 +91,92 @@ export const InvoiceForm: React.FC = () => {
         return () => unsubscribe();
     }, [setUser]);
 
+
+    //Calculations
+    // Set the precision and rounding mode to match Excel
+    Decimal.set({ precision: 15, rounding: Decimal.ROUND_HALF_UP });
+
+    // Helper function to convert to Decimal and round to 2 decimal places
+    const toDecimal = (value: string | number) => new Decimal(value).toDecimalPlaces(2);
+
+    // Helper function for percentage calculations
+    const calculatePercentage = (value: Decimal, rate: number) => 
+        value.times(rate).dividedBy(100).toDecimalPlaces(2);
+
+
     const handleCalculateTotal = useCallback(() => {
 
         const { items, delivery, taxRate, discountRate, transportation, installation, taxOnTransportation, taxOnInstallation } = state;
-        const newSubTotal = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
-            .toFixed(2);
+        
+        // const newSubTotal = items.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0)
+        //     .toFixed(2);
+        
+         // Calculate subtotal
+        const newSubTotal = items.reduce(
+        (acc, item) => acc.plus(toDecimal(item.price).times(item.quantity)),
+        new Decimal(0)
+        ).toDecimalPlaces(2);
 
+    
+        const transportationCost = toDecimal(transportation);
+        const installationCost = toDecimal(installation);
         // const transportationCost = parseFloat(transportation);
         // const installationCost = parseFloat(installation);
-
+        
+        // Calculate discount
+        const newDiscountAmount = calculatePercentage(newSubTotal, discountRate);
         // const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
-        // const newTaxAmount = ((parseFloat(newSubTotal) - parseFloat(newDiscountAmount)) * taxRate / 100).toFixed(2)
         
-        const transportationCost = parseFloat(transportation);
-        const installationCost = parseFloat(installation);
-        
-        const newDiscountAmount = ((parseFloat(newSubTotal) * discountRate) / 100).toFixed(2);
-        
-        let taxableAmount = parseFloat(newSubTotal) - parseFloat(newDiscountAmount);
-        if (taxOnTransportation) taxableAmount += transportationCost;
-        if (taxOnInstallation) taxableAmount += installationCost;
-        
-        // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(3);
-        
-        // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(2);
-        // const newTaxAmount = (taxableAmount * taxRate / 100).toFixed(3);
+
+        // Calculate taxable amount
+        let taxableAmount = newSubTotal.minus(newDiscountAmount);
+        if (taxOnTransportation) taxableAmount = taxableAmount.plus(transportationCost);
+        if (taxOnInstallation) taxableAmount = taxableAmount.plus(installationCost);
+        // let taxableAmount = parseFloat(newSubTotal) - parseFloat(newDiscountAmount);
+        // if (taxOnTransportation) taxableAmount += transportationCost;
+        // if (taxOnInstallation) taxableAmount += installationCost;
         
         
-        const newTaxAmount = Math.floor((taxableAmount * taxRate / 100) * 100) / 100;
+        
+            // Calculate tax
+        const newTaxAmount = calculatePercentage(taxableAmount, taxRate);
+        // const newTaxAmount = Math.floor((taxableAmount * taxRate / 100) * 100) / 100;
         
         
-        // const newTotal = (
-        //     parseFloat(newSubTotal) - 
-        //     parseFloat(newDiscountAmount) +
-        //     parseFloat(newTaxAmount) +
-        //     transportationCost +
-        //     installationCost
-        // ).toFixed(2);
-        const newTotal = (function() {
-            let total = (
-                parseFloat(newSubTotal) - 
-                parseFloat(newDiscountAmount) +
-                //@ts-ignore
-                parseFloat(newTaxAmount) +
-                transportationCost +
-                installationCost
-            ).toFixed(2);
-        
-            // If the total ends with .01, change it to .00
-            if (total.endsWith('.01')) {
-                return (parseFloat(total) - 0.01).toFixed(2);
-            }
-        
-            return total;
-        })();
-        
-        // .toFixed(2)
+       
+        // const newTotal = (function() {
+        //     let total = (
+        //         parseFloat(newSubTotal) - 
+        //         parseFloat(newDiscountAmount) +
+        //         //@ts-ignore
+        //         parseFloat(newTaxAmount) +
+        //         transportationCost +
+        //         installationCost
+        //     ).toFixed(2);
+         // Calculate total
+            const newTotal = newSubTotal
+            .minus(newDiscountAmount)
+            .plus(newTaxAmount)
+            .plus(transportationCost)
+            .plus(installationCost)
+            .toDecimalPlaces(2);
+
+            setState((prevState) => ({
+                ...prevState,
+                subTotal: newSubTotal.toFixed(2),
+                taxAmount: newTaxAmount.toFixed(2),
+                discountAmount: newDiscountAmount.toFixed(2),
+                total: newTotal.toFixed(2),
         
         //@ts-ignore
-        setState((prevState) => ({
-            //@ts-ignore
-            ...prevState,
-            subTotal: newSubTotal,
-            taxAmount: newTaxAmount,
-            discountAmount: newDiscountAmount,
-            total: newTotal,
+        // setState((prevState) => ({
+        //     //@ts-ignore
+        //     ...prevState,
+        //     subTotal: newSubTotal,
+        //     taxAmount: newTaxAmount,
+        //     discountAmount: newDiscountAmount,
+        //     total: newTotal,
         }));
-
-
     }, [state.items, state.delivery, state.taxRate, state.discountRate, state.transportation, state.installation, state.taxOnTransportation, state.taxOnInstallation]);
         
 

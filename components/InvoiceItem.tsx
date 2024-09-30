@@ -89,7 +89,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ item, onItemizedItemEdit, onDelEvent,
                     }}
                 />
             </td>
-            <td style={{ minWidth: "130px" }}>
+            <td style={{ width: "30%" }}>
                 <EditableField
                     onItemizedItemEdit={onItemizedItemEdit}
                     cellData={{
