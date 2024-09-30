@@ -99,6 +99,13 @@ export const InvoiceForm: React.FC = () => {
     // Helper function to convert to Decimal and round to 2 decimal places
     const toDecimal = (value: string | number) => new Decimal(value).toDecimalPlaces(2);
 
+    // Helper function to safely convert quantity to a number
+    const safeParseInt = (value: any): number => {
+        const parsed = parseInt(value, 10);
+        return isNaN(parsed) ? 0 : parsed;
+    };
+    
+
     // Helper function for percentage calculations
     const calculatePercentage = (value: Decimal, rate: number) => 
         value.times(rate).dividedBy(100).toDecimalPlaces(2);
@@ -112,10 +119,16 @@ export const InvoiceForm: React.FC = () => {
         //     .toFixed(2);
         
          // Calculate subtotal
-        const newSubTotal = items.reduce(
-        (acc, item) => acc.plus(toDecimal(item.price).times(item.quantity)),
-        new Decimal(0)
-        ).toDecimalPlaces(2);
+        // const newSubTotal = items.reduce(
+        // (acc, item) => acc.plus(toDecimal(item.price).times(item.quantity)),
+        // new Decimal(0)
+        // ).toDecimalPlaces(2);
+        // Calculate subtotal
+        const newSubTotal = items.reduce((acc, item) => {
+        const itemPrice = toDecimal(item.price);
+        const itemQuantity = safeParseInt(item.quantity);
+        return acc.plus(itemPrice.times(itemQuantity));
+        }, new Decimal(0)).toDecimalPlaces(2);
 
     
         const transportationCost = toDecimal(transportation);
